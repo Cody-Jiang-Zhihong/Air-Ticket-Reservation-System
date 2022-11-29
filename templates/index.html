@@ -6,28 +6,59 @@
 </head>
 
 <body>
-{% if not message %}
-	<a href="/login">Login</a>
-	<a href="/register">Register</a>
-{% endif %}
-
-{% if message %}
-	<a href="/logout">Logout</a>
-	<a href="/remove_account">Remove Account</a>
-	<p class="message">You are logged in {{message}}. You have {{num}} follower(s)</p> </br>
-	<a href="/tweets">View your tweets</a> </br>
-	<a href="/find_people">Find people to follow</a> </br>
-	<a href="/unfollow">Unfollow someone</a> </br>
-	<a href="/view_followed">View people you have followed</a> </br>
+<h1>Welcome to SV Airline System</h1>
+<a href="/login">Login</a>
+<a href="/register">Register</a>
+<br>
+<form action="/" method="POST">
+	<h3>Search for future flights (Only 1 of 4 groups need to be filled in to search)</h3>
+	<p>For one way trips:</p>
+	<input type="text" name = "source_city" placeholder="Source City"/></br>
+	<input type="text" name = "airport_name1" placeholder="Airport Name"/></br>
 	</br>
-
-        <h4>15 most recent tweets from you and your followers </h4> </br>
-
-	{% for line in tweets%}
-	        <p>{{line}}</p>
-	        <hr>
-	{% endfor %}
+	<input type="text" name = "destination_city" placeholder="Destination City"/></br>
+	<input type="text" name = "airport_name2" placeholder="Airport Name"/></br>
+	</br>
+	<input type="text" name = "departure_date" placeholder="Departure Date"/></br><br>
+	<p>For round trips:</p>
+	<input type="text" name = "departure_date" placeholder="Departure Date"/></br>
+	<input type="text" name = "arrival_date" placeholder="Arrival Date"/></br>
+	<input type="submit" value = Search>
+	{% if error %}
+		<p class="error"><strong>Error:</strong> {{error}}</p>
 	{% endif %}
+</form>
+<br>
+
+<style type="text/css">
+table, th, td{
+	border: 1px solid black;
+}
+</style>
+
+<table>
+	<th>Airline</th>
+	<th>Flight Number</th>
+	<th>Departure Airport</th>
+	<th>Departure Date</th>
+	<th>Arrival Airport</th>
+	<th>Arrival Date</th>
+	<th>Base Price</th>
+	<th>ID Number</th>
+
+{% for line in flights %}
+	<tr>
+		<td>{{line['airline']}}</td>
+		<td>{{line['flight_number']}}</td>
+		<td>{{line['departure_airport']}}</td>
+		<td>{{line['departure_date_and_time']}}</td>
+		<td>{{line['arrival_airport']}}</td>
+		<td>{{line['arrival_date_and_time']}}</td>
+		<td>{{line['base_price']}}</td>
+		<td>{{line['ID_num']}}</td>
+	</tr>
+{% endfor %}
+</table>
 </body>
 
 </html>
