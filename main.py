@@ -49,7 +49,10 @@ def viewFlightsAuth():
     destination_city = request.form['destination_city']
     airport_name2 = request.form['airport_name2']
 
-    departure_date = request.form['departure_date']
+    departure_date1 = request.form['departure_date1']
+
+    departure_date2 = request.form['departure_date2']
+    arrival_date = request.form['arrival_date']
 
     # cursor used to send queries
     cursor = conn.cursor()
@@ -60,7 +63,7 @@ def viewFlightsAuth():
         # executes query
         query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
                 "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE departure_airport = " \
-                "%s and city = %s"
+                "%s AND city = %s"
         cursor.execute(query, (airport_name1, source_city))
         queried = True
     # If second part is filled
@@ -68,15 +71,23 @@ def viewFlightsAuth():
         # executes query
         query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
                 "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE arrival_airport = " \
-                "%s and city = %s"
+                "%s AND city = %s"
         cursor.execute(query, (airport_name2, destination_city))
         queried = True
-    # If last part is filled
-    elif departure_date != "":
+    # If last part of one way is filled
+    elif departure_date1 != "":
         # executes query
         query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
                 "arrival_date_and_time, base_price, ID_num FROM flight WHERE departure_date_and_time = %s'
-        cursor.execute(query, departure_date)
+        cursor.execute(query, departure_date1)
+        queried = True
+    # If last part of round trip is filled
+    elif departure_date2 != "" and arrival_date != "":
+        # executes query
+        query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, ' \
+                '" \ "arrival_date_and_time, base_price, ID_num FROM flight WHERE departure_date_and_time = %s AND ' \
+                'arrival_date_and_time = %s '
+        cursor.execute(query, (departure_date2, arrival_date))
         queried = True
 
     if queried:
