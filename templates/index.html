@@ -1,34 +1,38 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title> Welcome to SV Airline System </title>
+        <p style="text-align:center"> Welcome to SV Airline System </p>
+        <!-- meta data -->
+        <meta name="viewport" content="width=device-width, initial-scale-1.0">
+        <link rel = "stylesheet" href="theStyle.css"/>
+    </head>
+    <body>
+        <main>
+			<button class="box" ><a href="login.html">Login</a></button>
+			<button class="box"><a href="register.html">Register</a></button>
+			
+			<br>
+			<form action="/" method="POST">
+				<h3 style="text-align:center">Search for future flights (Only 1 of 4 groups need to be filled in to search)</h3>
+				<p style="text-align:center">For one way trips:</p>
+				<input type="text" name = "source_city" placeholder="Source City"/></br>
+				<input type="text" name = "airport_name1" placeholder="Airport Name"/></br>
+				</br>
+				<input type="text" name = "destination_city" placeholder="Destination City"/></br>
+				<input type="text" name = "airport_name2" placeholder="Airport Name"/></br>
+				</br>
+				<input type="text" name = "departure_date1" placeholder="Departure Date"/></br><br>
+				<p style="text-align:center">For round trips:</p>
+				<input type="text" name = "departure_date2" placeholder="Departure Date"/></br>
+				<input type="text" name = "arrival_date" placeholder="Arrival Date"/></br>
+				<input type="submit" value = Search>
+				{% if error %}
+					<p class="error"><strong>Error:</strong> {{error}}</p>
+				{% endif %}
+			</form>
+			<br>
 
-<head>
-
-</head>
-
-<body>
-<h1>Welcome to SV Airline System</h1>
-<a href="/login">Login</a>
-<a href="/register">Register</a>
-<br>
-<form action="/" method="POST">
-	<h3>Search for future flights (Only 1 of 4 groups need to be filled in to search)</h3>
-	<p>For one way trips:</p>
-	<input type="text" name = "source_city" placeholder="Source City"/></br>
-	<input type="text" name = "airport_name1" placeholder="Airport Name"/></br>
-	</br>
-	<input type="text" name = "destination_city" placeholder="Destination City"/></br>
-	<input type="text" name = "airport_name2" placeholder="Airport Name"/></br>
-	</br>
-	<input type="text" name = "departure_date1" placeholder="Departure Date"/></br><br>
-	<p>For round trips:</p>
-	<input type="text" name = "departure_date2" placeholder="Departure Date"/></br>
-	<input type="text" name = "arrival_date" placeholder="Arrival Date"/></br>
-	<input type="submit" value = Search>
-	{% if error %}
-		<p class="error"><strong>Error:</strong> {{error}}</p>
-	{% endif %}
-</form>
-<br>
 
 <style type="text/css">
 table, th, td{
