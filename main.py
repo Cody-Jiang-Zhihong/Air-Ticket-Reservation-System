@@ -156,14 +156,40 @@ def loginAuth():
 @app.route('/registerAuth', methods=['GET', 'POST'])
 def registerAuth():
     # grabs information from the forms
-    username = request.form['username']
-    password = request.form['password']
+    username1 = request.form['username1']
+    password1 = request.form['password1']
+    email = request.form['email']
+    building_name = request.form['building_name']
+    street = request.form['street']
+    city = request.form['city']
+    state = request.form['state']
+    phone_number = request.form['phone_number']
+    passport_num = request.form['passport_num']
+    passport_expiration = request.form['passport_expiration']
+    passport_country = request.form['passport_country']
+    date_of_birth1 = request.form['date_of_birth1']
+
+    username2 = request.form['username2']
+    password2 = request.form['password2']
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    date_of_birth2 = request.form['date_of_birth2']
+    airline_name = request.form['airline_name']
+
+    customer = True
+    if username2 and password2 and first_name and last_name and date_of_birth2 and airline_name:
+        customer = False
 
     # cursor used to send queries
     cursor = conn.cursor()
     # executes query
-    query = 'SELECT * FROM user WHERE username = %s'
-    cursor.execute(query, (username))
+    if customer == "customer":
+        query = 'SELECT * FROM customer WHERE name = %s'
+        cursor.execute(query, (username1))
+    if not customer:
+        query = 'SELECT * FROM airline_staff WHERE username = %s'
+        cursor.execute(query, (username2))
+
     # stores the results in a variable
     data = cursor.fetchone()
     # use fetchall() if you are expecting more than 1 data row
@@ -173,8 +199,13 @@ def registerAuth():
         error = "This user already exists"
         return render_template('register.html', error=error)
     else:
-        ins = 'INSERT INTO user VALUES(%s, %s)'
-        cursor.execute(ins, (username, password))
+        if customer:
+            query = 'INSERT INTO customer VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+            cursor.execute(query, (username1, email, password1, building_name, street, city, state, phone_number, passport_num, passport_expiration, passport_country, date_of_birth1))
+        if not customer:
+            query = 'INSERT INTO airline_staff VALUES(%s, %s, %s, %s, %s, %s)'
+            cursor.execute(query, (username2, password2, first_name, last_name, date_of_birth2, airline_name))
+
         conn.commit()
         cursor.close()
         return render_template('index.html')

@@ -59,7 +59,7 @@ create table Ticket (
     card_type varchar(10),
     card_num int(20),
     card_name varchar(10),
-    expiration_date int(10),
+    expiration_date datetime(1),
     purchase_date_and_time datetime(1),
 
     primary key (ticket_id)
@@ -108,9 +108,9 @@ create table Customer (
     state varchar(10),
     phone_num int(20),
     passport_num varchar(20),
-    passport_expiration int(10),
+    passport_expiration datetime(1),
     passport_country varchar(10),
-    date_of_birth int(10),
+    date_of_birth datetime(1),
 
     primary key (email)
 );
@@ -171,7 +171,7 @@ create table Airline_staff (
     password varchar(20),
     first_name varchar(10),
     last_name varchar(10),
-    date_of_birth int(10),
+    date_of_birth datetime(1),
     airline_name varchar(20) not null,
 
     primary key (username)
