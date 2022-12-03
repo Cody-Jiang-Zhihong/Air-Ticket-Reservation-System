@@ -26,18 +26,15 @@ def hello():
     cursor.close()
     return render_template('index.html', flights=data1)
 
-
-# Define route for login
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
-
 # Define route for register
-@app.route('/register')
+@app.route('/register/')
 def register():
     return render_template('register.html')
 
+# Define route for login
+@app.route('/login/')
+def login():
+    return render_template('login.html')
 
 # Authenticates the view flights
 @app.route('/', methods=['GET', 'POST'])
@@ -131,11 +128,25 @@ def loginAuth():
     username = request.form['username']
     password = request.form['password']
 
+    customer = -1
+    if "" not in [username, password]:
+        # If the username is an email
+        if "@" in username:
+            customer = 1
+        else:
+            customer = 0
+
     # cursor used to send queries
     cursor = conn.cursor()
     # executes query
-    query = 'SELECT * FROM user WHERE username = %s and password = %s'
-    cursor.execute(query, (username, password))
+    if customer == 1:
+        query = 'SELECT * FROM customer WHERE email = %s and password = MD5(%s)'
+        cursor.execute(query, (username, password))
+
+    if customer == 0:
+        query = 'SELECT * FROM airline_staff WHERE username = %s and password = MD5(%s)'
+        cursor.execute(query, (username, password))
+
     # stores the results in a variable
     data = cursor.fetchone()
     # use fetchall() if you are expecting more than 1 data row
@@ -145,7 +156,7 @@ def loginAuth():
         # creates a session for the user
         # session is a built in
         session['username'] = username
-        return redirect(url_for('home'))
+        return redirect(url_for('customer'))
     else:
         # returns an error message to the html page
         error = 'Invalid login or username'
@@ -176,17 +187,31 @@ def registerAuth():
     date_of_birth2 = request.form['date_of_birth2']
     airline_name = request.form['airline_name']
 
-    customer = True
-    if username2 and password2 and first_name and last_name and date_of_birth2 and airline_name:
-        customer = False
+    customer_data = [username1, email, password1, building_name, street, city, state, phone_number, passport_num,
+                     passport_expiration, passport_country, date_of_birth1]
+    staff_data = [username2, password2, first_name, last_name, date_of_birth2, airline_name]
+
+    customer = -1
+    if "" not in customer_data:
+        customer = 1
+    elif "" not in staff_data:
+        customer = 0
+
+    if customer and "@" not in email:
+        error = "Please enter a valid email"
+        return render_template('register.html', error=error)
+
+    if customer == -1:
+        error = "Please fill in all fields for the section you're signing up for"
+        return render_template('register.html', error=error)
 
     # cursor used to send queries
     cursor = conn.cursor()
     # executes query
-    if customer == "customer":
+    if customer == 1:
         query = 'SELECT * FROM customer WHERE name = %s'
         cursor.execute(query, (username1))
-    if not customer:
+    if customer == 0:
         query = 'SELECT * FROM airline_staff WHERE username = %s'
         cursor.execute(query, (username2))
 
@@ -199,42 +224,30 @@ def registerAuth():
         error = "This user already exists"
         return render_template('register.html', error=error)
     else:
-        if customer:
-            query = 'INSERT INTO customer VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+        if customer == 1:
+            query = 'INSERT INTO customer VALUES(%s, %s, MD5(%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)'
             cursor.execute(query, (username1, email, password1, building_name, street, city, state, phone_number, passport_num, passport_expiration, passport_country, date_of_birth1))
-        if not customer:
-            query = 'INSERT INTO airline_staff VALUES(%s, %s, %s, %s, %s, %s)'
+            conn.commit()
+            cursor.close()
+            return render_template('index.html', register="You've been successfully registered as a Customer")
+        if customer == 0:
+            query = 'INSERT INTO airline_staff VALUES(%s, MD5(%s), %s, %s, %s, %s)'
             cursor.execute(query, (username2, password2, first_name, last_name, date_of_birth2, airline_name))
+            conn.commit()
+            cursor.close()
+            return render_template('index.html', register="You've been successfully registered as an Airline Staff")
 
-        conn.commit()
-        cursor.close()
-        return render_template('index.html')
-
-
-@app.route('/home')
-def home():
+@app.route('/customer', methods=['GET', 'POST'])
+def customer():
     username = session['username']
-    cursor = conn.cursor();
-    query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
-    cursor.execute(query, (username))
-    data1 = cursor.fetchall()
-    for each in data1:
-        print(each['blog_post'])
-    cursor.close()
-    return render_template('home.html', username=username, posts=data1)
-
-
-@app.route('/post', methods=['GET', 'POST'])
-def post():
-    username = session['username']
-    cursor = conn.cursor();
-    blog = request.form['blog']
-    query = 'INSERT INTO blog (blog_post, username) VALUES(%s, %s)'
-    cursor.execute(query, (blog, username))
-    conn.commit()
-    cursor.close()
-    return redirect(url_for('home'))
-
+    # cursor = conn.cursor();
+    # query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
+    # cursor.execute(query, (username))
+    # data1 = cursor.fetchall()
+    # for each in data1:
+    #     print(each['blog_post'])
+    # cursor.close()
+    return render_template('customer.html', username=username)
 
 @app.route('/logout')
 def logout():

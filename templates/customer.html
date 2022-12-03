@@ -1,0 +1,118 @@
+<html>
+<head>
+</head>
+<body>
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+</style>
+
+{% if error %}
+	<p class="spent"><strong>You have spent</strong> {{error}} <strong> dollars this month</strong></p>
+{% endif %}
+
+<table>
+	<th>Month</th>
+	<th>Money Spent</th>
+
+{% for line in monthly_spending %}
+	<tr>
+		<td>{{line['month']}}</td>
+		<td>{{line['spending']}}</td>
+	</tr>
+{% endfor %}
+</table><br>
+
+<form action="/" method="POST">
+	<h3>Find Monthly Spending on Certain Range</h3>
+	<input type="text" name = "date_start" placeholder="Start date"/>
+	<input type="text" name = "date_end" placeholder="End date"/></br>
+	<input type="submit" value = "Set Range">
+</form>
+
+<form action="/" method="POST">
+	<h3>Perform action on flight</h3>
+	<input type="text" name = "p_airline" placeholder="Airline"/></br>
+	<input type="text" name = "p_flight_number" placeholder="Flight Number"/></br>
+	<input type="text" name = "p_departure_date" placeholder="Departure Date"/></br>
+	<input type="submit" value = "Purchase ticket"><input type="submit" value = "Cancel Ticket">
+	<h3>Leave a Review!</h3>
+	<input type="text" name = "rating" placeholder="Flight Number"/></br>
+	<input type="text" name = "comment" placeholder="I think that this flight was..."/></br>
+	<input type="submit" value = "Add Review">
+</form>
+
+<h3>My Flights</h3>
+<table>
+	<th>Airline</th>
+	<th>Flight Number</th>
+	<th>Departure Airport</th>
+	<th>Departure Date</th>
+	<th>Arrival Airport</th>
+	<th>Arrival Date</th>
+	<th>Base Price</th>
+	<th>ID Number</th>
+
+{% for line in flights %}
+	<tr>
+		<td>{{line['airline']}}</td>
+		<td>{{line['flight_number']}}</td>
+		<td>{{line['departure_airport']}}</td>
+		<td>{{line['departure_date_and_time']}}</td>
+		<td>{{line['arrival_airport']}}</td>
+		<td>{{line['arrival_date_and_time']}}</td>
+		<td>{{line['base_price']}}</td>
+		<td>{{line['ID_num']}}</td>
+	</tr>
+{% endfor %}
+</table><br>
+
+<form action="/" method="POST">
+	<h3>Search for Flights to Purchase</h3>
+	<p>For one way trips:</p>
+	<input type="text" name = "source_city" placeholder="Source City"/></br>
+	<input type="text" name = "airport_name1" placeholder="Airport Name"/></br>
+	</br>
+	<input type="text" name = "destination_city" placeholder="Destination City"/></br>
+	<input type="text" name = "airport_name2" placeholder="Airport Name"/></br>
+	</br>
+	<input type="text" name = "departure_date1" placeholder="Departure Date"/></br><br>
+	<p>For round trips:</p>
+	<input type="text" name = "departure_date2" placeholder="Departure Date"/></br>
+	<input type="text" name = "arrival_date" placeholder="Arrival Date"/></br>
+	<input type="submit" value = Search>
+	{% if error %}
+		<p class="error"><strong>Error:</strong> {{error}}</p>
+	{% endif %}
+</form>
+<table>
+	<th>Airline</th>
+	<th>Flight Number</th>
+	<th>Departure Airport</th>
+	<th>Departure Date</th>
+	<th>Arrival Airport</th>
+	<th>Arrival Date</th>
+	<th>Base Price</th>
+	<th>ID Number</th>
+
+{% for line in flights %}
+	<tr>
+		<td>{{line['airline']}}</td>
+		<td>{{line['flight_number']}}</td>
+		<td>{{line['departure_airport']}}</td>
+		<td>{{line['departure_date_and_time']}}</td>
+		<td>{{line['arrival_airport']}}</td>
+		<td>{{line['arrival_date_and_time']}}</td>
+		<td>{{line['base_price']}}</td>
+		<td>{{line['ID_num']}}</td>
+	</tr>
+{% endfor %}
+</table><br>
+
+<a href="/logout">Logout</a>
+
+</body>
+
+
+</html>
