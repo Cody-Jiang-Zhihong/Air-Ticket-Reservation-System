@@ -17,7 +17,7 @@ conn = pymysql.connect(host='localhost',
 # Define a route to hello function
 @app.route('/')
 def hello():
-    cursor = conn.cursor();
+    cursor = conn.cursor()
     query = 'SELECT * FROM flight'
     cursor.execute(query)
     data1 = cursor.fetchall()
@@ -35,6 +35,16 @@ def register():
 @app.route('/login/')
 def login():
     return render_template('login.html')
+
+# Define route for Customer
+@app.route('/customer/')
+def register():
+    return render_template('register.html')
+
+# Define route for AirlineStuff
+@app.route('/airlinestaff/')
+def register():
+    return render_template('airlinestaff.html')
 
 # Authenticates the view flights
 @app.route('/', methods=['GET', 'POST'])
@@ -356,7 +366,7 @@ def customer():
                 print(each)
             cursor.close()
             error = 'Incomplete or incorrect data provided'
-            return render_template('index.html', error=error, flights=data1)
+            return render_template('customer.html', error=error, flights=data1)
     else:
         # returns an error message to the html page
         cursor = conn.cursor()
@@ -367,7 +377,7 @@ def customer():
             print(each)
         cursor.close()
         error = 'Incomplete or incorrect data provided'
-        return render_template('index.html', error=error, flights=data1)
+        return render_template('customer.html', error=error, flights=data1)
 
 
     return render_template('customer.html', username=username)
@@ -375,8 +385,8 @@ def customer():
 
 
 
-@app.route('/customer', methods=['GET', 'POST'])
-def customer():
+@app.route('/airlinestaff', methods=['GET', 'POST'])
+def airlinestaff():
     username = session['username']
 
     airline = request.form['airline']
@@ -527,7 +537,7 @@ def customer():
                 print(each)
             cursor.close()
             error = 'Incomplete or incorrect data provided'
-            return render_template('index.html', error=error, flights=data1)
+            return render_template('airlinestaff.html', error=error, flights=data1)
     else:
         # returns an error message to the html page
         cursor = conn.cursor()
@@ -538,7 +548,7 @@ def customer():
             print(each)
         cursor.close()
         error = 'Incomplete or incorrect data provided'
-        return render_template('index.html', error=error, flights=data1)
+        return render_template('airlinestaff.html', error=error, flights=data1)
 
 
 
