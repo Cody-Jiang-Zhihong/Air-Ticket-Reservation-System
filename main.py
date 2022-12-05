@@ -39,7 +39,7 @@ def login():
 # Define route for Customer
 @app.route('/customer/')
 def register():
-    return render_template('register.html')
+    return render_template('customer.html')
 
 # Define route for AirlineStuff
 @app.route('/airlinestaff/')
