@@ -373,6 +373,175 @@ def customer():
     return render_template('customer.html', username=username)
 
 
+
+
+@app.route('/customer', methods=['GET', 'POST'])
+def customer():
+    username = session['username']
+
+    airline = request.form['airline']
+    flight_number = request.form['flight_number']
+    departure_date_and_time = request.form['departure_date_and_time']
+    departure_airport = request.form['departure_airport']
+    arrival_airport = request.form['arrival_airport']
+    arrival_date_and_time = request.form['arrival_date_and_time']
+    base_price = request.form['base_price']
+    ID_num = request.form['ID_num']
+    number_of_seats = request.form['number_of_seats']
+    manufacturing_company = request.form['manufacturing_company']
+    age = request.form['age']
+    airport_name = request.form['airport_name']
+    city = request.form['city']
+    country = request.form['country']
+    airport_type = request.form['airport_type']
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
+    todays_date = request.form['todays_date']
+    status = request.form['status']
+    
+    # cursor used to send queries
+    cursor = conn.cursor()
+    queried = False
+
+    #View flights:
+    query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
+                "arrival_date_and_time, base_price, ID_num FROM ticket, \
+            WHERE stuff_email = (SELECT email \
+                                    FROM stuff \
+                                    WHERE username = %s);"
+    cursor.execute(query, (username))
+
+
+    # If Create new flights: is filled:
+    if airline != "" and flight_number != "" and departure_airport != "" and departure_date_and_time != "" \
+        and arrival_airport != ""and arrival_date_and_time != ""and base_price != "" \
+        and ID_num != "":
+        # executes query
+        query = "INSERT INTO flight (airline, flight_number, departure_airport, \
+                 departure_date_and_time, arrival_airport, arrival_date_and_time, base_price, ID_num) \
+                VALUES ('%s', '%s', '%s', '%s', '%s', '%s');"
+        cursor.execute(query, (airline, flight_number, departure_airport, departure_date_and_time, \
+                                arrival_airport, arrival_date_and_time, base_price, ID_num))
+        queried = True
+
+
+    # If Change Status of flights: is filled:
+    if airline != "" and flight_number != "" and status != "":
+        # executes query
+        query = "UPDATE set_status \
+                SET airline = %s, flight_number = %s, departure_date_and_time  = %s, the_status  = %s;"
+        cursor.execute(query, (airline, flight_number, status))
+        queried = True
+
+
+    # If Add airplane in the system: is filled:
+    if airline != "" and ID_num != "" and number_of_seats != "" and manufacturing_company != "" and age != "":
+        # executes query
+        query = "INSERT INTO airplane (airline, ID_num, number_of_seats, manufacturing_company, age) \
+                VALUES ('%s', '%s', '%s', '%s', '%s');"
+        cursor.execute(query, (airline, ID_num, number_of_seats, manufacturing_company, age))
+        queried = True
+
+
+    # If Add new airport in the system: is filled:
+    if airport_name != "" and city != "" and country != "":
+        # executes query
+        query = "INSERT INTO airport (name, city, country) \
+                VALUES ('%s', '%s', '%s');"
+        cursor.execute(query, (airport_name, city, country))
+
+        query = "INSERT INTO airport_type (name, airport_type) \
+                VALUES ('%s', '%s');"
+        cursor.execute(query, (airport_name, airport_type))
+        queried = True
+
+
+    # If View flight ratings: is filled:
+    if airline != "" and flight_number != "" and departure_date_and_time != "":
+        # executes query
+        # Airline Staff will be able to see each flight’s average ratings and all the comments
+        # and ratings of that flight given by the customers.
+        query = "SELECT avg(sum(rating), comment, rating \
+                FROM review\
+                WHERE airline = %s AND flight_number = %s AND departure_date_and_time = %s"
+        cursor.execute(query, (airline, flight_number, departure_date_and_time))
+        queried = True
+
+
+    # If View frequent customers: is filled:
+    if airline != "" and flight_number == "" and departure_date_and_time == "": # only airline is not null
+        # executes query
+        query = "SELECT name \
+                FROM customer\
+                WHERE email = (SELECT customer_email \
+                                FROM ticket \
+                                WHERE MAX(COUNT(airline_name = %s)))"
+        cursor.execute(query, (airline))
+        queried = True
+
+
+    # If View reports: is filled:
+    if start_date != "" and end_date == "":
+        # executes query
+        query = "SELECT COUNT(ticket_id) \
+                FROM tickets\
+                WHERE purchase_date_and_time between %s and %s"
+        cursor.execute(query, (start_date, end_date))
+        queried = True
+
+
+    # If View Earned Revenue: is filled:
+    if todays_date != "":
+        # FOR Last Month:
+        query = "SELECT SUM(sold_price) \
+                FROM tickets\
+                WHERE purchase_date_and_time between %s and %s"
+        cursor.execute(query, (todays_date - 31, todays_date)) # assume one month is 31 days
+        queried = True
+
+        # FOR Last Year:
+        query = "SELECT SUM(sold_price) \
+                FROM tickets\
+                WHERE purchase_date_and_time between %s and %s"
+        cursor.execute(query, (todays_date - 365, todays_date)) # assume one month is 365 days
+        queried = True
+
+
+    if queried:
+        # stores the results in a variable
+        data = cursor.fetchall()
+        for d in data:
+            print(d)
+        # use fetchall() if you are expecting more than 1 data row
+        cursor.close()
+        error = None
+        if data:
+            return render_template('index.html', flights=data)
+        else:
+            # returns an error message to the html page
+            cursor = conn.cursor()
+            query = 'SELECT * FROM flight'
+            cursor.execute(query)
+            data1 = cursor.fetchall()
+            for each in data1:
+                print(each)
+            cursor.close()
+            error = 'Incomplete or incorrect data provided'
+            return render_template('index.html', error=error, flights=data1)
+    else:
+        # returns an error message to the html page
+        cursor = conn.cursor()
+        query = 'SELECT * FROM flight'
+        cursor.execute(query)
+        data1 = cursor.fetchall()
+        for each in data1:
+            print(each)
+        cursor.close()
+        error = 'Incomplete or incorrect data provided'
+        return render_template('index.html', error=error, flights=data1)
+
+
+
 @app.route('/logout')
 def logout():
     session.pop('username')
