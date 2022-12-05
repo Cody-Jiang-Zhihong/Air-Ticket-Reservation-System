@@ -1,0 +1,125 @@
+<html>
+<head>
+</head>
+<body>
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+</style>
+
+
+<h3>View My flights:</h3>
+<table>
+	<th>Airline</th>
+	<th>Flight Number</th>
+	<th>Departure Airport</th>
+	<th>Departure Date</th>
+	<th>Arrival Airport</th>
+	<th>Arrival Date</th>
+	<th>Base Price</th>
+	<th>ID Number</th>
+
+	<tr>
+		<td>{{line['airline']}}</td>
+		<td>{{line['flight_number']}}</td>
+		<td>{{line['departure_airport']}}</td>
+		<td>{{line['departure_date_and_time']}}</td>
+		<td>{{line['arrival_airport']}}</td>
+		<td>{{line['arrival_date_and_time']}}</td>
+		<td>{{line['base_price']}}</td>
+		<td>{{line['ID_num']}}</td>
+	</tr>
+	
+</table><br>
+
+<form action="/" method="POST">
+	<h3>Create new flights:</h3>
+	<input type="text" name = "airline" placeholder="Airline"/></br>
+	<input type="text" name = "flight_number" placeholder="Flight Number"/></br>
+	<input type="text" name = "departure_airport" placeholder="Departure Airport"/></br>
+	<input type="text" name = "departure_date_and_time" placeholder="Departure Date and Time"/></br>
+	<input type="text" name = "arrival_airport" placeholder="Arrival Airport"/></br>
+	<input type="text" name = "arrival_date_and_time" placeholder="Arrival Date and Time"/></br>
+	<input type="text" name = "base_price" placeholder="Base Price"/></br>
+	<input type="text" name = "ID_num" placeholder="ID Number"/></br>
+
+	<input type="submit" value = Create>
+</form>
+
+<form action="/" method="POST">
+	<h3>Change Status of flights:</h3>
+	<input type="text" name = "airline" placeholder="Airline"/></br>
+	<input type="text" name = "flight_number" placeholder="Flight Number"/></br>
+	<input type="submit" value = "On-Time"><input type="submit" value = "Delayed">
+</form>
+
+
+<form action="/" method="POST">
+	<h3>Add airplane in the system: </h3>	
+
+	<input type="text" name = "airline" placeholder="Airline"/></br>
+	<input type="text" name = "ID_num" placeholder="ID Number"/></br>
+	<input type="text" name = "number_of_seats" placeholder="Number of Seats"/></br>
+	<input type="text" name = "manufacturing_company" placeholder="Manufacturing Company"/></br>
+	<input type="text" name = "airline" placeholder="Airline"/></br>
+	<input type="text" name = "age" placeholder="Age"/></br>
+
+	<input type="submit" value = "Add">
+</form>
+
+
+<form action="/" method="POST">
+	<h3>Add new airport in the system: </h3>	
+				 	
+	<input type="text" name = "name" placeholder="Name"/></br>
+	<input type="text" name = "city" placeholder="City"/></br>
+	<input type="text" name = "country" placeholder="Country"/></br>
+	<input type="text" name = "airport_type" placeholder="Airport Type"/></br>
+
+	<input type="submit" value = "Add">
+</form>
+
+
+<form action="/" method="POST">
+	<h3>View flight ratings: </h3>	
+				 	 
+	<input type="text" name = "airline" placeholder="Airline"/></br>
+	<input type="text" name = "flight_number" placeholder="Flight Number"/></br>
+	<input type="text" name = "departure_date_and_time" placeholder="Departure Date and Time"/></br>
+
+	<input type="submit" value = "View Ratings">
+</form>
+
+
+<form action="/" method="POST">
+	<h3> View frequent customers: </h3>	
+				 	 
+	<input type="text" name = "airline" placeholder="Airline"/></br>
+
+	<input type="submit" value = "Search">
+</form>
+
+
+<form action="/" method="POST">
+	<h3> View reports: </h3>
+	<input type="text" name = "start_date" placeholder="Start Date"/></br>
+	<input type="text" name = "end_date" placeholder="End Date"/></br>
+
+	<input type="submit" value = "View Report">
+</form>
+
+
+<form action="/" method="POST">
+	<h3> View Earned Revenue:  </h3>
+	<input type="text" name = "todays_date" placeholder="Todays Date"/></br>
+
+	<input type="submit" value = "Last Month"><input type="submit" value = "Last Year">
+</form>
+
+<a href="/logout">Logout</a>
+
+</body>
+
+
+</html>
