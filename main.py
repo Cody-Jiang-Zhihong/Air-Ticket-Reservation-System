@@ -526,7 +526,7 @@ def airlinestaff():
         cursor.close()
         error = None
         if data:
-            return render_template('index.html', flights=data)
+            return render_template('airlinestaff.html', flights=data)
         else:
             # returns an error message to the html page
             cursor = conn.cursor()
