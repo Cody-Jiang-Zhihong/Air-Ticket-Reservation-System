@@ -36,15 +36,18 @@ def register():
 def login():
     return render_template('login.html')
 
+'''
 # Define route for Customer
 @app.route('/customer/')
 def register():
     return render_template('customer.html')
+    
 
 # Define route for AirlineStuff
 @app.route('/airlinestaff/')
 def register():
     return render_template('airlinestaff.html')
+'''
 
 # Authenticates the view flights
 @app.route('/', methods=['GET', 'POST'])
