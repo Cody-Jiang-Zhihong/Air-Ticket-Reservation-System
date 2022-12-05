@@ -27,27 +27,25 @@ def hello():
     return render_template('index.html', flights=data1)
 
 # Define route for register
-@app.route('/register.html/')
+@app.route('/register/')
 def register():
     return render_template('register.html')
 
 # Define route for login
-@app.route('/login.html/')
+@app.route('/login/')
 def login():
     return render_template('login.html')
 
-'''
 # Define route for Customer
 @app.route('/customer/')
-def register():
+def customer():
     return render_template('customer.html')
-    
 
 # Define route for AirlineStuff
 @app.route('/airlinestaff/')
-def register():
+def airlinestaff():
     return render_template('airlinestaff.html')
-'''
+
 
 # Authenticates the view flights
 @app.route('/', methods=['GET', 'POST'])
@@ -252,7 +250,7 @@ def registerAuth():
 
 
 @app.route('/customer', methods=['GET', 'POST'])
-def customer():
+def customerAuth():
     username = session['username']
 
     source_city = request.form['source_city']
@@ -381,15 +379,10 @@ def customer():
         cursor.close()
         error = 'Incomplete or incorrect data provided'
         return render_template('customer.html', error=error, flights=data1)
-
-
     return render_template('customer.html', username=username)
 
-
-
-
 @app.route('/airlinestaff', methods=['GET', 'POST'])
-def airlinestaff():
+def airlinestaffAuth():
     username = session['username']
 
     airline = request.form['airline']
