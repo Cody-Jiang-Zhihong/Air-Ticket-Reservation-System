@@ -67,9 +67,16 @@
 </form>
 
 
+<form action="/" method="POST">
+	<h3>Track My Spending:</h3>
+	<input type="text" name = "date_start" placeholder="Start date"/>
+	<input type="text" name = "date_end" placeholder="End date"/></br>
+	<input type="submit" value = "Set Range">
+</form>
 
-
-
+{% if error %}
+	<p class="spent"><strong>You have spent</strong> {{error}} <strong> dollars this month</strong></p>
+{% endif %}
 <table>
 	<th>Month</th>
 	<th>Money Spent</th>
@@ -81,18 +88,6 @@
 	</tr>
 {% endfor %}
 </table><br>
-
-<form action="/" method="POST">
-	<h3>Track My Spending:</h3>
-	<input type="text" name = "date_start" placeholder="Start date"/>
-	<input type="text" name = "date_end" placeholder="End date"/></br>
-	<input type="submit" value = "Set Range">
-</form>
-
-{% if error %}
-	<p class="spent"><strong>You have spent</strong> {{error}} <strong> dollars this month</strong></p>
-{% endif %}
-
 
 <a href="/logout">Logout</a>
 
