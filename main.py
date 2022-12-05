@@ -27,12 +27,12 @@ def hello():
     return render_template('index.html', flights=data1)
 
 # Define route for register
-@app.route('/register/')
+@app.route('/register.html/')
 def register():
     return render_template('register.html')
 
 # Define route for login
-@app.route('/login/')
+@app.route('/login.html/')
 def login():
     return render_template('login.html')
 
