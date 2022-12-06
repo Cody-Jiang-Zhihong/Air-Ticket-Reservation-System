@@ -31,9 +31,9 @@ insert into Airport values ('PVG', 'Shanghai', 'China');
 insert into Airport values ('SDJ', 'Sendai', 'Japan');
 insert into Airport values ('YNY', 'Yangyang', 'South Korea');
 
-insert into Customer values ('Cody', 'zj2247@nyu.edu', '123456', '2Metrotech', 'JayST', 'Brooklyn', 'NY', '91754588', 'EA999', '2022-11-29 21:22::00.0', 'China', '2000-11-29 21:22::00.0');
-insert into Customer values ('Preston', 'plt7955@nyu.edu', '123456', '2Metrotech', 'JayST', 'Brooklyn', 'NY', '12349', 'EA12345', '2022-11-29 21:22::00.0', 'US', '2000-11-29 21:22::00.0');
-insert into Customer values ('Tony', 'sth1234@uyn.edu', '123456', '2Metrotech', 'JayST', 'Brooklyn', 'NY', '098765543', 'EA22222', '2022-11-29 21:22::00.0', 'US', '2000-11-29 21:22::00.0');
+insert into Customer values ('Cody', 'zj2247@nyu.edu', MD5('12345'), '2Metrotech', 'JayST', 'Brooklyn', 'NY', '91754588', 'EA999', '2022-11-29 21:22::00.0', 'China', '2000-11-29 21:22::00.0');
+insert into Customer values ('Preston', 'plt7955@nyu.edu', MD5('12345'), '2Metrotech', 'JayST', 'Brooklyn', 'NY', '12349', 'EA12345', '2022-11-29 21:22::00.0', 'US', '2000-11-29 21:22::00.0');
+insert into Customer values ('Tony', 'sth1234@uyn.edu', MD5('12345'), '2Metrotech', 'JayST', 'Brooklyn', 'NY', '098765543', 'EA22222', '2022-11-29 21:22::00.0', 'US', '2000-11-29 21:22::00.0');
 
 insert into Airplane values ('Jet Blue', '2270001', '248', 'PokemonCompany', '2');
 insert into Airplane values ('Jet Blue', '265601', '128', 'PokemonCompany', '4');

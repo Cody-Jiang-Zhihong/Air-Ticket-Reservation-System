@@ -101,7 +101,7 @@ create table Hosts (
 create table Customer (
     name varchar(20),
     email varchar(20) not null,
-    password varchar(30),
+    password varchar(32),
     building_name varchar(10),
     street varchar(10),
     city varchar(10),
@@ -168,7 +168,7 @@ create table Orders (
 
 create table Airline_staff (
     username varchar(20) not null,
-    password varchar(20),
+    password varchar(32),
     first_name varchar(10),
     last_name varchar(10),
     date_of_birth datetime(1),
