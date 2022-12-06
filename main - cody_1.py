@@ -27,27 +27,25 @@ def hello():
     return render_template('index.html', flights=data1)
 
 # Define route for register
-@app.route('/register.html/')
+@app.route('/register/')
 def register():
     return render_template('register.html')
 
 # Define route for login
-@app.route('/login.html/')
+@app.route('/login/')
 def login():
     return render_template('login.html')
 
-'''
 # Define route for Customer
 @app.route('/customer/')
-def register():
+def customer():
     return render_template('customer.html')
-    
 
 # Define route for AirlineStuff
 @app.route('/airlinestaff/')
-def register():
+def airlinestaff():
     return render_template('airlinestaff.html')
-'''
+
 
 # Authenticates the view flights
 @app.route('/', methods=['GET', 'POST'])
@@ -169,7 +167,7 @@ def loginAuth():
         # creates a session for the user
         # session is a built in
         session['username'] = username
-        return redirect(url_for('customer.html'))
+        return redirect(url_for('customer'))
     else:
         # returns an error message to the html page
         error = 'Invalid login or username'
@@ -252,7 +250,7 @@ def registerAuth():
 
 
 @app.route('/customer', methods=['GET', 'POST'])
-def customer():
+def customerAuth():
     username = session['username']
 
     source_city = request.form['source_city']
@@ -263,7 +261,6 @@ def customer():
 
     departure_date1 = request.form['departure_date1']
 
-    departure_date2 = request.form['departure_date2']
     arrival_date = request.form['arrival_date']
 
     airline = request.form['airline']
@@ -296,7 +293,7 @@ def customer():
         # executes query
         query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
                 "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE departure_airport = " \
-                "%s AND city = %s AND destination_city = %s AND arrival_airport = %s;"
+                "%s AND city = %s AND city = %s AND arrival_airport = %s;"
         cursor.execute(query, (airport_name1, source_city, destination_city, airport_name2))
         queried = True
     
@@ -381,15 +378,10 @@ def customer():
         cursor.close()
         error = 'Incomplete or incorrect data provided'
         return render_template('customer.html', error=error, flights=data1)
-
-
     return render_template('customer.html', username=username)
 
-
-
-
 @app.route('/airlinestaff', methods=['GET', 'POST'])
-def airlinestaff():
+def airlinestaffAuth():
     username = session['username']
 
     airline = request.form['airline']
@@ -505,18 +497,20 @@ def airlinestaff():
 
     # If View Earned Revenue: is filled:
     if todays_date != "":
-        # FOR Last Month:
+        # FOR Last year:
         query = "SELECT SUM(sold_price) \
                 FROM tickets\
-                WHERE purchase_date_and_time between %s and %s"
-        cursor.execute(query, (todays_date - 31, todays_date)) # assume one month is 31 days
+                WHERE purchase_date_and_time between DATEFROMPARTS(YEAR(%s)-1,12,31) and %s;"
+                # https://stackoverflow.com/questions/73072586/getting-the-last-day-of-the-previous-year-in-sql
+        cursor.execute(query, (todays_date, todays_date)) # SELECT DATEFROMPARTS(YEAR(GETDATE())-1,12,31);
         queried = True
 
-        # FOR Last Year:
+        # FOR Last month:
         query = "SELECT SUM(sold_price) \
                 FROM tickets\
-                WHERE purchase_date_and_time between %s and %s"
-        cursor.execute(query, (todays_date - 365, todays_date)) # assume one month is 365 days
+                WHERE purchase_date_and_time between DATEADD(month, -1, %s) and %s"
+                # https://stackoverflow.com/questions/1424999/get-the-records-of-last-month-in-sql-server
+        cursor.execute(query, (todays_date - 365, todays_date)) # DATEADD(month, -1, @startOfCurrentMonth)
         queried = True
 
 
