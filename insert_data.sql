@@ -1,7 +1,6 @@
 delete from Airport;
 delete from Airport_type;
 delete from Operates_in;
-
 delete from Owns;
 delete from Airplane;
 delete from Airline;
