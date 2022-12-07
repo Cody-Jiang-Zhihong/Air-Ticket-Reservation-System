@@ -56,12 +56,12 @@ insert into Flight values ('EVA Air', '3231', 'PVG', '2018-11-12 21:22:00.0', 'S
 insert into Flight values ('Nippon Airways', '2143', 'PVG', '2017-11-14 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '500', '00001');
 
 
-insert into Ticket values ('1', '', 'Jet Blue', '123', '500', '2002-11-10 21:22:00.0', 'Visa', '312866464', 'cardone', '20260810', '20221108');
-insert into Ticket values ('2', '', 'Jet Blue', '123', '500', '2002-11-10 21:22:00.0', 'Visa', '54353473', 'cardtwo', '20240810', '20221117');
-insert into Ticket values ('3', '', 'Jet Blue', '123', '500', '2022-11-10 21:12:00.0', 'Visa', '87956462', 'cardthree', '20260225', '20221119');
+insert into Ticket values ('1', 'zj2247@nyu.edu', 'Jet Blue', '123', '500', '2002-11-10 21:22:00.0', 'Visa', '312866464', 'cardone', '20260810', '20221108');
+insert into Ticket values ('2', 'zj2247@nyu.edu', 'Jet Blue', '123', '500', '2002-11-10 21:22:00.0', 'Visa', '54353473', 'cardtwo', '20240810', '20221017');
+insert into Ticket values ('3', 'zj2247@nyu.edu', 'Jet Blue', '123', '500', '2022-11-10 21:12:00.0', 'Visa', '87956462', 'cardthree', '20260225', '20220919');
+insert into Ticket values ('4', 'zj2247@nyu.edu', 'Jet Blue', '123', '700', '2022-11-10 21:12:00.0', 'Visa', '87956462', 'cardfour', '20260225', '20220919');
 
 
 insert into Set_status values ('IronMan', 'Jet Blue', '213421', '2022-11-29 21:22:00.0', 'on-time');
 insert into Set_status values ('IronMan', 'Jet Blue', '676432', '2022-11-29 21:22:00.0', 'on-time');
 insert into Set_status values ('IronMan', 'Jet Blue', '439999', '2022-11-29 21:22:00.0', 'delayed');
-
