@@ -20,6 +20,7 @@
 	<th>Base Price</th>
 	<th>ID Number</th>
 
+{% for line in myflights %}
 	<tr>
 		<td>{{line['airline']}}</td>
 		<td>{{line['flight_number']}}</td>
@@ -30,10 +31,10 @@
 		<td>{{line['base_price']}}</td>
 		<td>{{line['ID_num']}}</td>
 	</tr>
-	
+{% endfor %}
 </table><br>
 
-<form action="/" method="POST">
+<form action="/airlinestaffAuth" method="POST">
 	<h3>Create new flights:</h3>
 	<input type="text" name = "airline" placeholder="Airline"/></br>
 	<input type="text" name = "flight_number" placeholder="Flight Number"/></br>
@@ -47,7 +48,7 @@
 	<input type="submit" value = Create>
 </form>
 
-<form action="/" method="POST">
+<form action="/airlinestaffAuth" method="POST">
 	<h3>Change Status of flights:</h3>
 	<input type="text" name = "airline" placeholder="Airline"/></br>
 	<input type="text" name = "flight_number" placeholder="Flight Number"/></br>
@@ -56,7 +57,7 @@
 </form>
 
 
-<form action="/" method="POST">
+<form action="/airlinestaffAuth" method="POST">
 	<h3>Add airplane in the system: </h3>	
 
 	<input type="text" name = "airline" placeholder="Airline"/></br>
@@ -69,7 +70,7 @@
 </form>
 
 
-<form action="/" method="POST">
+<form action="/airlinestaffAuth" method="POST">
 	<h3>Add new airport in the system: </h3>	
 				 	
 	<input type="text" name = "airport_name" placeholder="Name"/></br>
@@ -81,7 +82,7 @@
 </form>
 
 
-<form action="/" method="POST">
+<form action="/airlinestaffAuth" method="POST">
 	<h3>View flight ratings: </h3>	
 				 	 
 	<input type="text" name = "airline" placeholder="Airline"/></br>
@@ -92,7 +93,7 @@
 </form>
 
 
-<form action="/" method="POST">
+<form action="/airlinestaffAuth" method="POST">
 	<h3> View frequent customers: </h3>	
 				 	 
 	<input type="text" name = "airline" placeholder="Airline"/></br>
@@ -101,7 +102,7 @@
 </form>
 
 
-<form action="/" method="POST">
+<form action="/airlinestaffAuth" method="POST">
 	<h3> View reports: </h3>
 	<input type="text" name = "start_date" placeholder="Start Date"/></br>
 	<input type="text" name = "end_date" placeholder="End Date"/></br>
@@ -110,7 +111,7 @@
 </form>
 
 
-<form action="/" method="POST">
+<form action="/airlinestaffAuth" method="POST">
 	<h3> View Earned Revenue:  </h3>
 	<input type="text" name = "todays_date" placeholder="Todays Date"/></br>
 

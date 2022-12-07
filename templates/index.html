@@ -10,6 +10,9 @@
 <a href="/login">Login</a>
 <a href="/register">Register</a>
 <br>
+{% if register %}
+	<h2 style="color:blue">{{register}}</h2>
+{% endif %}
 <form action="/" method="POST">
 	<h3>Search for future flights (Only 1 of 4 groups need to be filled in to search)</h3>
 	<p>For one way trips:</p>

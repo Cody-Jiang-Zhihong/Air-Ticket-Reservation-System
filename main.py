@@ -1,4 +1,6 @@
 # Import Flask Library
+import random
+
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
 
@@ -36,17 +38,28 @@ def register():
 def login():
     return render_template('login.html')
 
-
 # Define route for Customer
 @app.route('/customer/')
 def customer():
-    return render_template('customer.html')
+    # Gets all available flights
+    cursor = conn.cursor()
+    query = 'SELECT * FROM flight'
+    cursor.execute(query)
+    data1 = cursor.fetchall()
+
+    # # View My flights:
+    # query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, arrival_date_and_time, base_price, id_num FROM ticket NATURAL JOIN flight WHERE customer_email = (SELECT email \
+    #                             FROM customer \
+    #                             WHERE email = %s) AND"
+    # cursor.execute(query, (session['username']))
+    # data2 = cursor.fetchall()
+    cursor.close()
+    return render_template('customer.html', flights=data1)
 
 # Define route for AirlineStuff
 @app.route('/airlinestaff/')
 def airlinestaff():
     return render_template('airlinestaff.html')
-
 
 # Authenticates the view flights
 @app.route('/viewFlightsAuth', methods=['GET', 'POST'])
@@ -115,8 +128,6 @@ def viewFlightsAuth():
             query = 'SELECT * FROM flight'
             cursor.execute(query)
             data1 = cursor.fetchall()
-            for each in data1:
-                print(each)
             cursor.close()
             error = 'Incomplete or incorrect data provided'
             return render_template('index.html', error=error, flights=data1)
@@ -126,8 +137,6 @@ def viewFlightsAuth():
         query = 'SELECT * FROM flight'
         cursor.execute(query)
         data1 = cursor.fetchall()
-        for each in data1:
-            print(each)
         cursor.close()
         error = 'Incomplete or incorrect data provided'
         return render_template('index.html', error=error, flights=data1)
@@ -202,18 +211,25 @@ def registerAuth():
     last_name = request.form['last_name']
     date_of_birth2 = request.form['date_of_birth2']
     airline_name = request.form['airline_name']
+    phone_numbers = request.form['phone_numbers']
+    email_addresses = request.form['email_addresses']
 
     customer_data = [username1, email, password1, building_name, street, city, state, phone_number, passport_num,
                      passport_expiration, passport_country, date_of_birth1]
-    staff_data = [username2, password2, first_name, last_name, date_of_birth2, airline_name]
+    staff_data = [username2, password2, first_name, last_name, date_of_birth2, airline_name, phone_numbers, email_addresses]
 
     customer = -1
     if "" not in customer_data:
         customer = 1
     elif "" not in staff_data:
         customer = 0
+        email_addresses = email_addresses.replace(" ", "")
+        phone_numbers = phone_numbers.replace(" ", "")
+        if "@" not in email_addresses:
+            error = "Please enter a valid email"
+            return render_template('register.html', error=error)
 
-    if customer and "@" not in email:
+    if customer == 1 and "@" not in email:
         error = "Please enter a valid email"
         return render_template('register.html', error=error)
 
@@ -247,142 +263,181 @@ def registerAuth():
             cursor.close()
             return render_template('index.html', register="You've been successfully registered as a Customer")
         if customer == 0:
+            # Insert into airline_staff
             query = 'INSERT INTO airline_staff VALUES(%s, MD5(%s), %s, %s, %s, %s)'
             cursor.execute(query, (username2, password2, first_name, last_name, date_of_birth2, airline_name))
             conn.commit()
+
+            # Insert into airline_staff emails
+            query = 'INSERT INTO email_address VALUES(%s, %s)'
+            cursor.execute(query, (username2, email_addresses))
+            conn.commit()
+
+            # Insert into airline_staff phone numbers
+            query = 'INSERT INTO phone_number VALUES(%s, %s)'
+            cursor.execute(query, (username2, phone_numbers))
+            conn.commit()
+
             cursor.close()
             return render_template('index.html', register="You've been successfully registered as an Airline Staff")
-
 
 @app.route('/customerAuth', methods=['GET', 'POST'])
 def customerAuth():
     username = session['username']
-
-    source_city = request.form['source_city']
-    airport_name1 = request.form['airport_name1']
-
-    destination_city = request.form['destination_city']
-    airport_name2 = request.form['airport_name2']
-
-    departure_date1 = request.form['departure_date1']
-
-    arrival_date = request.form['arrival_date']
-
-    airline = request.form['airline']
-    flight_number = request.form['flight_number']
-    departure_date = request.form['departure_date']
-
-    # we need to add all these things below in html later
-    rating = request.form['rating']
-    review = request.form['review']
-    start_date = request.form['start_date']
-    end_date = request.form['end_date']
-    # we need to add all these things above in html later
-    
     # cursor used to send queries
     cursor = conn.cursor()
+    error = None
     queried = False
 
-    #View My flights:
-    query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
-                "arrival_date_and_time, base_price, ID_num FROM ticket, \
-            WHERE customer_email = (SELECT email \
-                                    FROM customer \
-                                    WHERE username = %s);"
-    cursor.execute(query, (username))
+    # Generates random ticket_id, will failproof this later
+    ticket_id = random.randint(1, 9999999)
 
+    # Search for flights function
+    if 'search' in request.form:
+        source_city = request.form['source_city']
+        airport_name1 = request.form['airport_name1']
 
-    # If Search for flights: is filled:
-    # FOR one way trips:
-    if source_city != "" and airport_name1 != "" and destination_city != "" and airport_name2 != "":
-        # executes query
-        query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
-                "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE departure_airport = " \
-                "%s AND city = %s AND destination_city = %s AND arrival_airport = %s;"
-        cursor.execute(query, (airport_name1, source_city, destination_city, airport_name2))
-        queried = True
-    
-    # FOR round trips:
-    if departure_date1 != "" and arrival_date != "":
-        # executes query
-        query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
-                "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE departure_date = " \
-                "%s AND arrival_date = %s;"
-        cursor.execute(query, (departure_date1, arrival_date))
-        queried = True
-        
-    ticket_id = 1
-    # If Perform action on flight: is filled
-    if airline != "" and flight_number != "" and departure_date != "":
-        # if click purchase:
-        # BTW I think we dont need departure_date here, since we can all things if we have flight_number
-        query = "UPDATE ticket \
-                SET ticket_id = %s, customer_email = (SELECT email FROM customer where name = %s), \
-                    airline_name = %s, flight_number = %s, sold_price = (SELECT price FROM flight where number = %s);"
-        cursor.execute(query, (ticket_id, username, airline, flight_number, flight_number))
-        ticket_id += 1
-        queried = True
+        destination_city = request.form['destination_city']
+        airport_name2 = request.form['airport_name2']
 
-        # if click cancel:
-        query = "DELETE FROM ticket \
-                WHERE airline = %s AND flight_number = %s"
-        cursor.execute(query, (airline, flight_number))
-        queried = True
+        departure_date1 = request.form['departure_date1']
 
+        departure_date2 = request.form['departure_date2']
+        arrival_date = request.form['arrival_date']
 
+        # If first part is filled
+        if source_city != "" and airport_name1 != "":
+            # executes query
+            query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
+                    "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE departure_airport = " \
+                    "%s AND city = %s"
+            cursor.execute(query, (airport_name1, source_city))
+            queried = True
+        # If second part is filled
+        elif destination_city != "" and airport_name2 != "":
+            # executes query
+            query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
+                    "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE arrival_airport = " \
+                    "%s AND city = %s"
+            cursor.execute(query, (airport_name2, destination_city))
+            queried = True
+        # If last part of one way is filled
+        elif departure_date1 != "":
+            # executes query
+            query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
+                           "arrival_date_and_time, base_price, ID_num FROM flight WHERE departure_date_and_time = %s'
+            cursor.execute(query, departure_date1)
+            queried = True
+        # If last part of round trip is filled
+        elif departure_date2 != "" and arrival_date != "":
+            # executes query
+            query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, ' \
+                    '" \ "arrival_date_and_time, base_price, ID_num FROM flight WHERE departure_date_and_time = %s AND ' \
+                    'arrival_date_and_time = %s '
+            cursor.execute(query, (departure_date2, arrival_date))
+            queried = True
+        else:
+            error = "You're missing information required to search for a flight"
 
-    # If Give Ratings and Comment on previous flights: is filled
-    elif flight_number != "" and review != "":
-        # executes query
-        query = "UPDATE review \
-                SET email = (SELECT email FROM customer where name = %s), \
-                    airline_name = %s, flight_number = %s, rating = %s, review = %s"
-        cursor.execute(query, (username, airline, flight_number, flight_number, rating, review))
-        queried = True
+    # Perform action on flight (purchase ticket, cancel trip)
+    if 'purchase' in request.form or 'cancel' in request.form:
+        airline = request.form['p_airline']
+        flight_number = request.form['p_flight_number']
+        departure_date = request.form['p_departure_date']
+        base_price = request.form['p_base_price']
 
+        if airline != "" and flight_number != "" and departure_date != "":
+            # if click purchase:
+            if 'purchase' in request.form:
+                query = "UPDATE ticket SET customer_email = (SELECT email FROM customer where name = %s) WHERE " \
+                        "airline_name = %s AND flight_number = %s AND sold_price = %s AND customer_email IS NULL "
+                cursor.execute(query, (username, airline, flight_number, base_price))
 
-    # If Track My Spending: is filled
-    elif start_date != "" and end_date != "":
-        # executes query
-        query = 'SELECT SUM(sold_price IN( SELECT sold_price \
-                                            FROM ticket\
-                                            WHERE purchase_date_and_time > start_date \
-                                                AND end_date < end_date))'
-        cursor.execute(query, (start_date, end_date))
-        queried = True
+            # if click cancel:
+            if 'cancel' in request.form:
+                query = "DELETE FROM ticket \
+                        WHERE airline = %s AND flight_number = %s"
+                cursor.execute(query, (airline, flight_number))
+                queried = True
+        else:
+            error = "You're missing information required to perform an action on a ticket"
+
+    # Rate or comment on prev flight
+    if 'submit_review' in request.form:
+        airline = request.form['p_airline']
+        flight_number = request.form['p_flight_number']
+        departure_date = request.form['p_departure_date']
+        rating = request.form['rating']
+        review = request.form['comment']
+
+        if airline != "" and flight_number != "" and departure_date != "":
+            # If Give Ratings and Comment on previous flights: is filled
+            if rating != "" and review != "" and 'submit_review' in request.form:
+                # executes query
+                query = "UPDATE review \
+                            SET email = (SELECT email FROM customer where name = %s), \
+                                airline_name = %s, flight_number = %s, rating = %s, review = %s"
+                cursor.execute(query, (username, airline, flight_number, flight_number, rating, review))
+            else:
+                error = "You're missing information required to submit a review"
+        else:
+            error = "You're missing information required to submit a review"
+
+    # Track my spending
+    if 'track' in request.form:
+        start_date = request.form['date_start']
+        end_date = request.form['date_end']
+
+        # If Track My Spending: is filled
+        if start_date != "" and end_date != "":
+            # executes query
+            query = 'SELECT SUM(sold_price IN( SELECT sold_price \
+                                                    FROM ticket\
+                                                    WHERE purchase_date_and_time > start_date \
+                                                        AND end_date < end_date))'
+            cursor.execute(query, (start_date, end_date))
+        else:
+            error = "You're missing information required to track your spending"
 
     if queried:
         # stores the results in a variable
         data = cursor.fetchall()
-        for d in data:
-            print(d)
-        # use fetchall() if you are expecting more than 1 data row
         cursor.close()
-        error = None
         if data:
+            print("Data:", data)
             return render_template('customer.html', flights=data)
         else:
-            # returns an error message to the html page
+            # Gets all available flights
             cursor = conn.cursor()
             query = 'SELECT * FROM flight'
             cursor.execute(query)
             data1 = cursor.fetchall()
-            for each in data1:
-                print(each)
+
+            # View My flights:
+            query = "SELECT * FROM ticket WHERE customer_email = (SELECT email \
+                                            FROM customer \
+                                            WHERE customer_email = %s);"
+            cursor.execute(query, (session['username']))
+            data2 = cursor.fetchall()
             cursor.close()
-            error = 'Incomplete or incorrect data provided'
-            return render_template('customer.html', error=error, flights=data1)
+            error = "We were unable to perform the operation you've requested due to incorrect or incomplete data, " \
+                    "please try again. "
+            return render_template('customer.html', error=error, flights=data1, myflights=data2)
     else:
-        # returns an error message to the html page
+        # Gets all available flights
         cursor = conn.cursor()
         query = 'SELECT * FROM flight'
         cursor.execute(query)
         data1 = cursor.fetchall()
-        for each in data1:
-            print(each)
+
+        # View My flights:
+        query = "SELECT * FROM ticket WHERE customer_email = (SELECT email \
+                                        FROM customer \
+                                        WHERE customer_email = %s);"
+        cursor.execute(query, (session['username']))
+        data2 = cursor.fetchall()
         cursor.close()
-        error = 'Incomplete or incorrect data provided'
-        return render_template('customer.html', error=error, flights=data1)
+        return render_template('customer.html', error=error, flights=data1, myflights=data2)
 
 @app.route('/airlinestaffAuth', methods=['GET', 'POST'])
 def airlinestaffAuth():
