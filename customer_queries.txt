@@ -1,0 +1,25 @@
+customer_queries.txt
+
+6.Track My Spending: Default view will be total amount of money spent in the past year and a bar chart/table showing month wise money spent for last 6 months. He/she will also have option to specify a range of dates to view total amount of money spent within that range and a bar chart/table showing month wise money spent within that range. 
+
+# replace all datetime with the user inputs
+
+In the past year:
+
+SELECT SUM(ticket.sold_price)
+FROM ticket, customer
+WHERE customer.email = 'zj2247@nyu.edu' AND 
+		customer.email = ticket.customer_email AND 
+        purchase_date_and_time between (YEAR('2022-11-29 21:22::00.0')-1) and '2022-11-29 21:22:00.0';
+
+
+In the last 6 month, month by month:
+
+SELECT SUM(ticket.sold_price) as total_spend, 
+	MONTH (ticket.purchase_date_and_time) AS Month
+FROM ticket, customer
+WHERE customer.email = 'zj2247@nyu.edu' AND 
+		customer.email = ticket.customer_email AND 
+        ticket.purchase_date_and_time between (MONTH('2022-11-29 21:22::00.0')-6) and '2022-11-29 21:22:00.0'
+GROUP BY Month desc;
+
