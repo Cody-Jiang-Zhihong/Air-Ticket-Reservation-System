@@ -1,0 +1,58 @@
+airline_staff-queries.txt
+
+
+2. Create new flights:
+
+INSERT INTO flight (airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, arrival_date_and_time, base_price, ID_num) VALUES ('Jet Blue', '777771', 'JFK', '2022-11-29 21:22::00.0', 'PVG', '2022-11-30 08:22::00.0', '2300', '111771');
+
+
+3. Change Status of flights:
+
+UPDATE set_status
+SET the_status = 'on-time' 
+WHERE username = 'b' AND airline = 'Jet Blue' AND flight_number = '777771' AND departure_date_and_time = '2022-11-29 21:22::00.0';
+
+
+4. Add airplane:
+INSERT INTO airplane (airline, ID_num, number_of_seats, manufacturing_company, age)
+VALUES ('Jet Blue', '111771', '244', 'Pikachu Co.', '1');
+
+5. Add new airport:
+INSERT INTO airport (name, city, country)
+VALUES ('LAX', 'LA', 'US');
+
+INSERT INTO airport_type (name, airport_type)
+VALUES ('LAX', 'international');
+
+domestic/international
+
+
+6. View flight ratings:
+SELECT avg(rating), comment, rating
+FROM review
+WHERE airline = 'Jet Blue' AND flight_number = '777771' AND departure_date_and_time = '2022-11-29 21:22::00.0';
+
+
+7.View frequent customers:
+SELECT customer.name, COUNT(ticket.ticket_id) as most_frequent
+FROM customer, ticket
+WHERE customer.email = ticket.customer_email AND ticket.airline_name = 'Jet Blue'
+ORDER BY most_frequent DESC;
+
+
+8. View reports:
+SELECT COUNT(ticket_id)
+FROM ticket
+WHERE purchase_date_and_time between '2021-11-29 21:22::00.0' and '2022-11-29 21:22::00.0'
+
+9. View Earned Revenue:
+# FOR Last year:
+SELECT SUM(sold_price) as Earned_Revenue
+FROM ticket
+WHERE purchase_date_and_time between (YEAR('2022-11-29 21:22::00.0')-1) and '2022-11-29 21:22::00.0';
+
+# FOR Last month:
+SELECT SUM(sold_price) as Earned_Revenue
+FROM ticket
+WHERE purchase_date_and_time between (MONTH('2022-11-29 21:22::00.0')-1) and '2022-11-29 21:22::00.0';
+
