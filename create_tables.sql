@@ -49,31 +49,6 @@ create table Owns (
     foreign key (airline, ID_num) references Airplane(airline, ID_num)
 );
 
-create table Ticket (
-    ticket_id int(20) not null,
-    customer_email varchar(40),
-    airline_name varchar(20),
-    flight_number int(20),
-    sold_price int(10),
-
-    card_type varchar(10),
-    card_num int(20),
-    card_name varchar(10),
-    expiration_date datetime(1),
-    purchase_date_and_time datetime(1),
-
-    primary key (ticket_id)
-);
-
-create table Issued_by (
-    ticket_id int(20) not null,
-    airline_name varchar(20) not null,
-
-    primary key (ticket_id, airline_name),
-    foreign key (ticket_id) references Ticket(ticket_id),
-    foreign key (airline_name) references Airplane(airline)
-);
-
 create table Flight (
     airline varchar(20) not null,
     flight_number int(10) not null,
@@ -85,6 +60,33 @@ create table Flight (
     ID_num int(10),
 
     primary key (airline, flight_number, departure_date_and_time)
+);
+
+create table Ticket (
+    ticket_id int(20) not null,
+    customer_email varchar(40),
+    airline varchar(20) not null,
+    flight_number int(10) not null,
+    sold_price int(10),
+    departure_date_and_time datetime(1) not null,
+
+    card_type varchar(10),
+    card_num int(20),
+    card_name varchar(10),
+    expiration_date datetime(1),
+    purchase_date_and_time datetime(1),
+
+    primary key (ticket_id),
+    foreign key (airline, flight_number, departure_date_and_time) references Flight(airline, flight_number, departure_date_and_time)
+);
+
+create table Issued_by (
+    ticket_id int(20) not null,
+    airline_name varchar(20) not null,
+
+    primary key (ticket_id, airline_name),
+    foreign key (ticket_id) references Ticket(ticket_id),
+    foreign key (airline_name) references Airplane(airline)
 );
 
 create table Hosts (
@@ -137,26 +139,6 @@ create table View_info (
     primary key (email, airline, flight_number, departure_date_and_time)
 );
 
-create table Past_flights (
-    email varchar(20) not null,
-    airline varchar(20) not null,
-    flight_number int(10) not null,
-    departure_date_and_time datetime(1) not null,
-    past_flight varchar(10),
-
-    primary key (email, airline, flight_number, departure_date_and_time)
-);
-
-create table Future_flights (
-    email varchar(20) not null,
-    airline varchar(20) not null,
-    flight_number int(10) not null,
-    departure_date_and_time datetime(1) not null,
-    future_flight varchar(10),
-
-    primary key (email, airline, flight_number, departure_date_and_time)
-);
-
 create table Orders (
     ticket_id int(20) not null,
     email varchar(20) not null,
@@ -179,7 +161,7 @@ create table Airline_staff (
 
 create table Phone_number (
     username varchar(20) not null,
-    phone_number int(20),
+    phone_number varchar(20),
 
     primary key (username),
     foreign key (username) references Airline_staff(username)
@@ -220,5 +202,6 @@ create table Set_status (
     the_status varchar(10),
 
     primary key (username, airline, flight_number, departure_date_and_time),
-    foreign key (username) references Airline_staff(username)    
+    foreign key (username) references Airline_staff(username),
+    foreign key (airline) references Airplane(airline)
 );

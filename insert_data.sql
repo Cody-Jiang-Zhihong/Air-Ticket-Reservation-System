@@ -1,10 +1,9 @@
 delete from Airport;
 delete from Airport_type;
 delete from Operates_in;
-delete from Airplane;
 delete from Airline;
 delete from Owns;
-
+delete from Airplane;
 delete from Issued_by;
 delete from Ticket;
 delete from Flight;
@@ -44,10 +43,6 @@ insert into Set_status values ('IronMan', 'Jet Blue', '213421', '202211', 'on-ti
 insert into Set_status values ('IronMan', 'Jet Blue', '676432', '202211', 'on-time');
 insert into Set_status values ('IronMan', 'Jet Blue', '439999', '202211', 'delayed');
 
-insert into Ticket values ('1', 'zj2247@nyu.edu', 'Jet Blue', '123', '500', 'Visa', '312866464', 'cardone', '20260810', '2022-12-7 21:22::00.0');
-insert into Ticket values ('2', 'abc111@nyu.edu', 'Jet Blue', '123', '500', 'Visa', '54353473', 'cardtwo', '20240810', '2022-12-7 21:22::00.0');
-insert into Ticket values ('3', 'def222@nyu.edu', 'Jet Blue', '123', '500', 'Visa', '87956462', 'cardthree', '20260225', '2022-12-7 21:22::00.0');
-
 insert into Flight values ('Jet Blue', '123', 'JFK', '2022-11-10 21:12:00.0', 'PVG', '2022-11-29 21:22::00.0', '500', '00001');
 insert into Flight values ('EVA Air', '321', 'SDJ', '2022-11-10 21:22:00.0', 'PVG', '2022-11-29 21:22::00.0', '1500', '00001');
 insert into Flight values ('Nippon Airways', '213', 'SDJ', '2012-11-10 21:22:00.0', 'JFK', '2022-11-29 21:22::00.0', '5010', '00001');
@@ -63,4 +58,8 @@ insert into Flight values ('Nippon Airways', '213', 'SDJ', '2020-11-7 21:22::00.
 insert into Flight values ('Japan Airlines', '1263', 'JFK', '2019-11-6 21:22::00.0', 'PVG', '2022-11-29 21:22::00.0', '500', '00001');
 insert into Flight values ('EVA Air', '3231', 'PVG', '2018-11-12 21:22::00.0', 'SDJ', '2022-11-29 21:22::00.0', '500', '00001');
 insert into Flight values ('Nippon Airways', '2143', 'PVG', '2017-11-14 21:22::00.0', 'JFK', '2022-11-29 21:22::00.0', '500', '00001');
+
+insert into Ticket values ('1', '', 'Jet Blue', '123', '500', '2002-11-10 21:22:00.0', 'Visa', '312866464', 'cardone', '20260810', '20221108');
+insert into Ticket values ('3', '', 'Jet Blue', '123', '500', '2022-11-10 21:12:00.0', 'Visa', '87956462', 'cardthree', '20260225', '20221119');
+
 
