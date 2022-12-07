@@ -36,7 +36,8 @@ create table Airplane (
     manufacturing_company varchar(20),
     age int(5),
 
-    primary key (airline, ID_num)
+    primary key (airline, ID_num),
+    foreign key (airline) references Airline(airline_name)
 );
 
 create table Owns (
