@@ -36,7 +36,7 @@ create table Airplane (
     manufacturing_company varchar(20),
     age int(5),
 
-    primary key (airline, ID_num)
+    primary key (airline, ID_num, number_of_seats, manufacturing_company, age )
 );
 
 create table Owns (
@@ -52,6 +52,7 @@ create table Owns (
 create table Flight (
     airline varchar(20) not null,
     flight_number int(10) not null,
+    airplane_id_num int(20) not null,
     departure_airport varchar(10),
     departure_date_and_time datetime(1) not null,
     arrival_airport varchar(10),
@@ -74,19 +75,8 @@ create table Ticket (
     card_num int(20),
     card_name varchar(10),
     expiration_date datetime(1),
-    purchase_date_and_time datetime(1),
+    purchase_date_and_time datetime(1)
 
-    primary key (ticket_id),
-    foreign key (airline, flight_number, departure_date_and_time) references Flight(airline, flight_number, departure_date_and_time)
-);
-
-create table Issued_by (
-    ticket_id int(20) not null,
-    airline_name varchar(20) not null,
-
-    primary key (ticket_id, airline_name),
-    foreign key (ticket_id) references Ticket(ticket_id),
-    foreign key (airline_name) references Airplane(airline)
 );
 
 create table Hosts (
@@ -139,15 +129,6 @@ create table View_info (
     primary key (email, airline, flight_number, departure_date_and_time)
 );
 
-create table Orders (
-    ticket_id int(20) not null,
-    email varchar(20) not null,
-
-    primary key (ticket_id, email),
-    foreign key (ticket_id) references Ticket(ticket_id),
-    foreign key (email) references Customer(email)
-);
-
 create table Airline_staff (
     username varchar(20) not null,
     password varchar(32),
@@ -188,10 +169,14 @@ create table Add_plane (
     username varchar(20) not null,
     airline varchar(20) not null,
     ID_num int(20) not null,
+    number_of_seats int(10) not null,
+    manufacturing_company varchar(20) not null,
+    age int(5) not null,
 
     primary key (username, airline, ID_num),
     foreign key (username) references Airline_staff(username),
-    foreign key (airline, ID_num) references Airplane(airline, ID_num)
+    foreign key (airline, ID_num, number_of_seats, manufacturing_company, age) 
+                       references Airplane(airline, ID_num, number_of_seats, manufacturing_company, age)
 );
 
 create table Set_status (
