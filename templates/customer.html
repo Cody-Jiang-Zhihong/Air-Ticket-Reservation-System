@@ -8,6 +8,10 @@
 	}
 </style>
 
+{% if success %}
+	<h2 style="color:blue">{{success}}<h2/>
+{% endif %}
+
 {% if error %}
 	<h2 style="color:red">{{error}}<h2/>
 {% endif %}
@@ -84,7 +88,13 @@
 	<input type="text" name = "p_flight_number" placeholder="Flight Number"/></br>
 	<input type="text" name = "p_departure_date" placeholder="Departure Date"/></br>
 	<input type="text" name = "p_base_price" placeholder="Base Price"/></br>
-	<input type="submit" name = "purchase" value = "Purchase ticket"><input type="submit" name ="cancel" value = "Cancel Trip">
+	<input type="submit" name ="cancel" value = "Cancel Trip"><br><br>
+
+	<input type="text" name = "card_type" placeholder="Visa"/></br>
+	<input type="text" name = "card_num" placeholder="Card Number"/></br>
+	<input type="text" name = "card_name" placeholder="Name on Card"/></br>
+	<input type="text" name = "expiration_date" placeholder="Expiration Date (2025-06)"/></br>
+	<input type="submit" name = "purchase" value = "Purchase ticket">
 
 	<h3>Give Ratings and Comment on previous flights: (Please use previous form to select flight)</h3>
 	<input type="text" name = "rating" placeholder="Rating out of 10"/></br>
@@ -92,13 +102,11 @@
 	<input type="submit" name = "submit_review" value = "Add Review">
 </form>
 
-<form action="/customerAuth" method="POST">
-	<h3>Track My Spending:</h3>
-	<input type="text" name = "date_start" placeholder="Start date"/>
-	<input type="text" name = "date_end" placeholder="End date"/></br>
-	<input type="submit" name = "track" value = "Set Range">
-</form>
+{% if last_year_spending %}
+	<h3>{{last_year_spending}}</h3>
+{% endif %}
 
+<h3>Money spent in the last 6 months:</h3>
 <table>
 	<th>Month</th>
 	<th>Money Spent</th>
@@ -110,6 +118,26 @@
 	</tr>
 {% endfor %}
 </table><br>
+
+<h3>Money spent in the range specified below:</h3>
+<table>
+	<th>Month</th>
+	<th>Money Spent</th>
+
+{% for line in range_spending %}
+	<tr>
+		<td>{{line['month']}}</td>
+		<td>{{line['spending']}}</td>
+	</tr>
+{% endfor %}
+</table><br>
+
+<form action="/customerAuth" method="POST">
+	<h3>Track My Spending:</h3>
+	<input type="text" name = "date_start" placeholder="Start date"/>
+	<input type="text" name = "date_end" placeholder="End date"/></br>
+	<input type="submit" name = "track" value = "Set Range">
+</form>
 
 <a href="/logout">Logout</a>
 

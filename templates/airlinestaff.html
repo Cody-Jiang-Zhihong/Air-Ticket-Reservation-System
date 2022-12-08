@@ -8,6 +8,13 @@
 	}
 </style>
 
+{% if success %}
+	<h2 style="color:blue">{{success}}<h2/>
+{% endif %}
+
+{% if error %}
+	<h2 style="color:red">{{error}}<h2/>
+{% endif %}
 
 <h3>View My flights:</h3>
 <table>
@@ -45,28 +52,44 @@
 	<input type="text" name = "base_price" placeholder="Base Price"/></br>
 	<input type="text" name = "ID_num" placeholder="ID Number"/></br>
 
-	<input type="submit" value = Create>
+	<input type="submit" name="create_new_flights" value = Create>
 </form>
 
 <form action="/airlinestaffAuth" method="POST">
 	<h3>Change Status of flights:</h3>
-	<input type="text" name = "airline" placeholder="Airline"/></br>
-	<input type="text" name = "flight_number" placeholder="Flight Number"/></br>
-	<input type="text" name = "status" placeholder="On-time or Delayed"/></br>
-	<input type="submit" value = "Set Status">
+	<input type="text" name = "airline1" placeholder="Airline"/></br>
+	<input type="text" name = "flight_number1" placeholder="Flight Number"/></br>
+	<input type="text" name = "departure_date_and_time1" placeholder="Departure Date and Time"/></br>
+	<input type="text" name = "status" placeholder="On-Time or Delayed"/></br>
+	<input type="submit" name = "set_status" value = "Set Status">
 </form>
 
+<h3>Airplanes Owned by {{airline}}</h3>
+<table>
+	<th>Airline</th>
+	<th>ID Number</th>
+	<th>Number of Seats</th>
+	<th>Manufacturing Company</th>
+	<th>Age</th>
 
+{% for line in airplanes %}
+	<tr>
+		<td>{{line['airline']}}</td>
+		<td>{{line['ID_num']}}</td>
+		<td>{{line['number_of_seats']}}</td>
+		<td>{{line['manufacturing_company']}}</td>
+		<td>{{line['age']}}</td>
+	</tr>
+{% endfor %}
+</table><br>
 <form action="/airlinestaffAuth" method="POST">
-	<h3>Add airplane in the system: </h3>	
-
-	<input type="text" name = "airline" placeholder="Airline"/></br>
-	<input type="text" name = "ID_num" placeholder="ID Number"/></br>
+	<h3>Add airplane in the system:</h3>
+	<input type="text" name = "airline2" placeholder="Airline"/></br>
+	<input type="text" name = "ID_num2" placeholder="ID Number"/></br>
 	<input type="text" name = "number_of_seats" placeholder="Number of Seats"/></br>
 	<input type="text" name = "manufacturing_company" placeholder="Manufacturing Company"/></br>
 	<input type="text" name = "age" placeholder="Age"/></br>
-
-	<input type="submit" value = "Add">
+	<input type="submit" name="add_airplane" value = "Add">
 </form>
 
 
@@ -78,49 +101,102 @@
 	<input type="text" name = "country" placeholder="Country"/></br>
 	<input type="text" name = "airport_type" placeholder="Airport Type"/></br>
 
-	<input type="submit" value = "Add">
+	<input type="submit" name="add_airport" value = "Add">
+</form>
+
+<h3>Flight Reviews:</h3>
+{% if average_rating %}
+	<h4>Average rating: {{average_rating}}</h4>
+{% endif %}
+<table>
+	<th>Rating</th>
+	<th>Comment</th>
+
+{% for line in reviews %}
+	<tr>
+		<td>{{line['rating']}}</td>
+		<td>{{line['comment']}}</td>
+	</tr>
+{% endfor %}
+</table><br>
+
+<form action="/airlinestaffAuth" method="POST">
+	<h3>View flight rating: </h3>
+	<input type="text" name = "airline3" placeholder="Airline"/></br>
+	<input type="text" name = "flight_number3" placeholder="Flight Number"/></br>
+	<input type="text" name = "departure_date_and_time3" placeholder="Departure Date and Time"/></br>
+
+	<input type="submit" name="view_ratings" value = "View Ratings">
 </form>
 
 
 <form action="/airlinestaffAuth" method="POST">
-	<h3>View flight ratings: </h3>	
-				 	 
-	<input type="text" name = "airline" placeholder="Airline"/></br>
-	<input type="text" name = "flight_number" placeholder="Flight Number"/></br>
-	<input type="text" name = "departure_date_and_time" placeholder="Departure Date and Time"/></br>
-
-	<input type="submit" value = "View Ratings">
+	<h3> View Most Frequent Customer in Airline: </h3>
+	{% if frequent_customer_data %}
+	<h4>{{frequent_customer_data}}</h4>
+	{% endif %}
+	<input type="text" name = "airline4" placeholder="Airline"/></br>
+	<input type="submit" name="view_most_frequent" value = "Search">
 </form>
 
+<h3>View Flights of a Customer in a Specific Airline:</h3>
+<table>
+	<th>Airline</th>
+	<th>Flight Number</th>
+	<th>Departure Airport</th>
+	<th>Departure Date</th>
+	<th>Arrival Airport</th>
+	<th>Arrival Date</th>
+	<th>Base Price</th>
+	<th>ID Number</th>
+
+{% for line in customer_flight %}
+	<tr>
+		<td>{{line['airline']}}</td>
+		<td>{{line['flight_number']}}</td>
+		<td>{{line['departure_airport']}}</td>
+		<td>{{line['departure_date_and_time']}}</td>
+		<td>{{line['arrival_airport']}}</td>
+		<td>{{line['arrival_date_and_time']}}</td>
+		<td>{{line['base_price']}}</td>
+		<td>{{line['ID_num']}}</td>
+	</tr>
+{% endfor %}
+</table><br>
 
 <form action="/airlinestaffAuth" method="POST">
-	<h3> View frequent customers: </h3>	
-				 	 
-	<input type="text" name = "airline" placeholder="Airline"/></br>
-
-	<input type="submit" value = "Search">
+	<input type="text" name = "airline5" placeholder="Jet Blue"/></br>
+	<input type="text" name = "customer_email" placeholder="John@gmail.com"/></br>
+	<input type="submit" name="view_specific_customer" value = "Search">
 </form>
-
 
 <form action="/airlinestaffAuth" method="POST">
 	<h3> View reports: </h3>
 	<input type="text" name = "start_date" placeholder="Start Date"/></br>
 	<input type="text" name = "end_date" placeholder="End Date"/></br>
-
-	<input type="submit" value = "View Report">
+	<input type="submit" name="view_report" value = "View Report">
 </form>
 
+<table>
+	<th>Month</th>
+	<th>Tickets Sold</th>
 
-<form action="/airlinestaffAuth" method="POST">
-	<h3> View Earned Revenue:  </h3>
-	<input type="text" name = "todays_date" placeholder="Todays Date"/></br>
+{% for line in report %}
+	<tr>
+		<td>{{line['Month']}}</td>
+		<td>{{line['amounts_of_ticket']}}</td>
+	</tr>
+{% endfor %}
+</table><br>
 
-	<input type="submit" value = "Last Month"><input type="submit" value = "Last Year">
-</form>
+{% if last_month_revenue %}
+<h4>Revenue earned since last month: {{last_month_revenue}}</h4><br>
+{% endif %}
+
+{% if last_year_revenue %}
+<h4>Revenue earned since last year: {{last_year_revenue}}</h4><br>
+{% endif %}
 
 <a href="/logout">Logout</a>
-
 </body>
-
-
 </html>
