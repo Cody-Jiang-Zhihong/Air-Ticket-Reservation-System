@@ -58,7 +58,6 @@ create table Flight (
     arrival_airport varchar(10),
     arrival_date_and_time datetime(1),
     base_price int(10),
-    ID_num int(10),
 
     primary key (airline, flight_number, departure_date_and_time)
 );
