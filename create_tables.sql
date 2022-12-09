@@ -184,6 +184,7 @@ create table Set_status (
     airline varchar(20) not null,
     flight_number int(10) not null,
     departure_date_and_time datetime(1) not null,
+    arrival_date_and_time datetime(1) not null,
     the_status varchar(10),
 
     primary key (username, airline, flight_number, departure_date_and_time),
