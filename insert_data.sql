@@ -38,21 +38,21 @@ insert into Airplane values ('Jet Blue', '21431', '10', 'PokemonCompany', '1');
 
 insert into Airline_staff values ('IronMan', '555555', 'Tony', 'Stark', '20001011','Jet Blue');
 
-insert into Flight values ('Jet Blue', '123', '222', 'JFK', '2022-11-10 21:12:00.0', 'PVG', '2022-11-29 21:22:00.0', '500', '00001');
-insert into Flight values ('EVA Air', '321', '256', 'SDJ', '2022-11-10 21:22:00.0', 'PVG', '2022-11-29 21:22:00.0', '1500', '00001');
-insert into Flight values ('Nippon Airways', '2635', '213', 'SDJ', '2012-11-10 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '5010', '00001');
-insert into Flight values ('Jet Blue', '123', '21431', 'JFK', '2002-11-10 21:22:00.0', 'SDJ', '2022-11-29 21:22:00.0', '500', '00001');
-insert into Flight values ('EVA Air', '3231', '452', 'SDJ', '2021-11-10 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '5001', '00001');
-insert into Flight values ('Nippon Airways', '213', '26385', 'SDJ', '2020-11-10 21:22:00.0', 'JFK', '2022-12-29 21:22:00.0', '500', '00001');
-insert into Flight values ('Japan Airlines', '1263', '2445', 'JFK', '2019-11-10 21:22:00.0', 'PVG', '2022-11-29 21:22:00.0', '500', '00001');
-insert into Flight values ('EVA Air', '3231', '2425', 'YNY', '2018-11-10 21:22:00.0', 'SDJ', '2022-11-29 21:22:00.0', '500', '00001');
-insert into Flight values ('Nippon Airways', '2143', '2125', 'SDJ', '2017-11-10 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '500', '00001');
-insert into Flight values ('Jet Blue', '1213', '2435', 'PVG', '2002-11-9 21:22:00.0', 'SDJ', '2022-11-29 21:22:00.0', '5100', '00001');
-insert into Flight values ('EVA Air', '3231', '21115',  'YNY', '2021-11-8 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '5001', '00001');
-insert into Flight values ('Nippon Airways', '213', '26385',  'SDJ', '2020-11-7 21:22:00.0', 'JFK', '2022-12-29 21:22:00.0', '500', '00001');
-insert into Flight values ('Japan Airlines', '1263', '2166635', 'JFK', '2019-11-6 21:22:00.0', 'PVG', '2022-11-29 21:22:00.0', '500', '00001');
-insert into Flight values ('EVA Air', '3231', '28335',  'PVG', '2018-11-12 21:22:00.0', 'SDJ', '2022-11-29 21:22:00.0', '500', '00001');
-insert into Flight values ('Nippon Airways', '2143', '27535',  'PVG', '2017-11-14 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '500', '00001');
+insert into Flight values ('Jet Blue', '123', '222', 'JFK', '2022-11-10 21:12:00.0', 'PVG', '2022-11-29 21:22:00.0', '500');
+insert into Flight values ('EVA Air', '321', '256', 'SDJ', '2022-11-10 21:22:00.0', 'PVG', '2022-11-29 21:22:00.0', '1500');
+insert into Flight values ('Nippon Airways', '2635', '213', 'SDJ', '2012-11-10 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '5010');
+insert into Flight values ('Jet Blue', '123', '21431', 'JFK', '2002-11-10 21:22:00.0', 'SDJ', '2022-11-29 21:22:00.0', '500');
+insert into Flight values ('EVA Air', '3231', '452', 'SDJ', '2021-11-10 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '5001');
+insert into Flight values ('Nippon Airways', '213', '26385', 'SDJ', '2020-11-10 21:22:00.0', 'JFK', '2022-12-29 21:22:00.0', '500');
+insert into Flight values ('Japan Airlines', '1263', '2445', 'JFK', '2019-11-10 21:22:00.0', 'PVG', '2022-11-29 21:22:00.0', '500');
+insert into Flight values ('EVA Air', '3231', '2425', 'YNY', '2018-11-10 21:22:00.0', 'SDJ', '2022-11-29 21:22:00.0', '500');
+insert into Flight values ('Nippon Airways', '2143', '2125', 'SDJ', '2017-11-10 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '500');
+insert into Flight values ('Jet Blue', '1213', '2435', 'PVG', '2002-11-9 21:22:00.0', 'SDJ', '2022-11-29 21:22:00.0', '5100');
+insert into Flight values ('EVA Air', '3231', '21115',  'YNY', '2021-11-8 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '5001');
+insert into Flight values ('Nippon Airways', '213', '26385',  'SDJ', '2020-11-7 21:22:00.0', 'JFK', '2022-12-29 21:22:00.0', '500');
+insert into Flight values ('Japan Airlines', '1263', '2166635', 'JFK', '2019-11-6 21:22:00.0', 'PVG', '2022-11-29 21:22:00.0', '500');
+insert into Flight values ('EVA Air', '3231', '28335',  'PVG', '2018-11-12 21:22:00.0', 'SDJ', '2022-11-29 21:22:00.0', '500');
+insert into Flight values ('Nippon Airways', '2143', '27535',  'PVG', '2017-11-14 21:22:00.0', 'JFK', '2022-11-29 21:22:00.0', '500');
 
 insert into Ticket values ('1', '', 'Jet Blue', '123', '500', '2022-11-10 21:12:00.0', 'Visa', '312866464', 'cardone', '20260810', '20221108');
 insert into Ticket values ('2', '', 'Jet Blue', '123', '500', '2022-11-10 21:12:00.0', 'Visa', '54353473', 'cardtwo', '20240810', '	20221117');
