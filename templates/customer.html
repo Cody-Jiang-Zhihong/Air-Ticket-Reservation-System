@@ -16,7 +16,6 @@
 	<h2 style="color:red">{{error}}<h2/>
 {% endif %}
 
-<h3>All Available Flights:</h3>
 <table>
 	<th>Airline</th>
 	<th>Flight Number</th>
@@ -27,7 +26,35 @@
 	<th>Base Price</th>
 	<th>ID Number</th>
 
-{% for line in flights %}
+{% if flights %}
+	{% for line in flights %}
+		<tr>
+			<td>{{line['airline']}}</td>
+			<td>{{line['flight_number']}}</td>
+			<td>{{line['departure_airport']}}</td>
+			<td>{{line['departure_date_and_time']}}</td>
+			<td>{{line['arrival_airport']}}</td>
+			<td>{{line['arrival_date_and_time']}}</td>
+			<td>{{line['base_price']}}</td>
+			<td>{{line['ID_num']}}</td>
+		</tr>
+	{% endfor %}
+{% endif %}
+
+{% for line in result1 %}
+		<tr>
+			<td>{{line['airline']}}</td>
+			<td>{{line['flight_number']}}</td>
+			<td>{{line['departure_airport']}}</td>
+			<td>{{line['departure_date_and_time']}}</td>
+			<td>{{line['arrival_airport']}}</td>
+			<td>{{line['arrival_date_and_time']}}</td>
+			<td>{{line['base_price']}}</td>
+			<td>{{line['ID_num']}}</td>
+		</tr>
+	{% endfor %}
+
+{% for line in result2 %}
 	<tr>
 		<td>{{line['airline']}}</td>
 		<td>{{line['flight_number']}}</td>
@@ -39,6 +66,9 @@
 		<td>{{line['ID_num']}}</td>
 	</tr>
 {% endfor %}
+
+{% if result1 and result2 %}
+{% endif %}
 </table>
 
 <h3>View My Flights:</h3>
@@ -66,28 +96,29 @@
 {% endfor %}
 </table><br>
 
-<form action="/customerAuth" method="POST">
-	<h3>Search for flights:</h3>
+<form action="/viewFlightsAuth" method="POST">
+	<h3>Search for future flights</h3>
 	<p>For one way trips:</p>
 	<input type="text" name = "source_city" placeholder="Source City"/></br>
-	<input type="text" name = "airport_name1" placeholder="Airport Name"/></br>
-	</br>
 	<input type="text" name = "destination_city" placeholder="Destination City"/></br>
-	<input type="text" name = "airport_name2" placeholder="Airport Name"/></br>
 	</br>
-	<input type="text" name = "departure_date1" placeholder="Departure Date"/></br><br>
-	<p>For round trips:</p>
-	<input type="text" name = "departure_date2" placeholder="Departure Date"/></br>
+	<input type="text" name = "airport_name1" placeholder="Source Airport Name"/></br>
+	<input type="text" name = "airport_name2" placeholder="Target Airport Name"/></br>
+	</br>
+	<p>For round trips: (Requires the 2 airports to be filled as well)</p>
+	<input type="text" name = "departure_date" placeholder="Departure Date"/></br>
 	<input type="text" name = "arrival_date" placeholder="Arrival Date"/></br>
-	<input type="submit" name = "search" value = "Search">
+	<input type="submit" name="one_way" value = "Search for One-Way">
+	<input type="submit" name="round_trip" value = "Search for Round-Trip">
+	<input type="submit" name="show_all" value = "Show all Flights">
 </form>
+<br>
 
 <form action="/customerAuth" method="POST">
 	<h3>Perform action on flight:</h3>
 	<input type="text" name = "p_airline" placeholder="Airline"/></br>
 	<input type="text" name = "p_flight_number" placeholder="Flight Number"/></br>
 	<input type="text" name = "p_departure_date" placeholder="Departure Date"/></br>
-	<input type="text" name = "p_base_price" placeholder="Base Price"/></br>
 	<input type="submit" name ="cancel" value = "Cancel Trip"><br><br>
 
 	<input type="text" name = "card_type" placeholder="Visa"/></br>
@@ -103,7 +134,7 @@
 </form>
 
 {% if last_year_spending %}
-	<h3>{{last_year_spending}}</h3>
+	<h3>You spent {{last_year_spending}} within the last year</h3>
 {% endif %}
 
 <h3>Money spent in the last 6 months:</h3>
@@ -113,8 +144,8 @@
 
 {% for line in monthly_spending %}
 	<tr>
-		<td>{{line['month']}}</td>
-		<td>{{line['spending']}}</td>
+		<td>{{line['Month']}}</td>
+		<td>{{line['total_spend']}}</td>
 	</tr>
 {% endfor %}
 </table><br>
@@ -126,8 +157,8 @@
 
 {% for line in range_spending %}
 	<tr>
-		<td>{{line['month']}}</td>
-		<td>{{line['spending']}}</td>
+		<td>{{line['Month']}}</td>
+		<td>{{line['total_spend']}}</td>
 	</tr>
 {% endfor %}
 </table><br>

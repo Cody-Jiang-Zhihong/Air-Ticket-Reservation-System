@@ -20,7 +20,7 @@ conn = pymysql.connect(host='localhost',
 @app.route('/')
 def hello():
     cursor = conn.cursor()
-    query = 'SELECT * FROM flight'
+    query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
     cursor.execute(query)
     data1 = cursor.fetchall()
     cursor.close()
@@ -39,18 +39,41 @@ def login():
 # Define route for Customer
 @app.route('/customer/')
 def customer():
+    # Get session username
+    username = session['username']
+
     # Gets all available flights
     cursor = conn.cursor()
-    query = 'SELECT * FROM flight'
+    query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
     cursor.execute(query)
     all_flights = cursor.fetchall()
 
     # View My flights:
     query = "SELECT ticket.airline, ticket.flight_number, departure_airport, ticket.departure_date_and_time, arrival_airport, arrival_date_and_time, base_price, ID_num FROM flight, ticket WHERE customer_email = %s AND flight.airline = ticket.airline AND flight.flight_number = ticket.flight_number AND flight.departure_date_and_time = ticket.departure_date_and_time;"
-    cursor.execute(query, (session['username']))
+    cursor.execute(query, (username))
     myflights = cursor.fetchall()
+
+    # Get last 6 month spending data
+    query = "SELECT SUM(ticket.sold_price) as total_spend, MONTH (ticket.purchase_date_and_time) AS Month FROM " \
+            "ticket, customer WHERE customer.email = %s AND customer.email = ticket.customer_email AND " \
+            "ticket.purchase_date_and_time between CURRENT_DATE() - INTERVAL 6 MONTH and CURRENT_DATE() GROUP BY " \
+            "Month desc; "
+    cursor.execute(query, (username))
+    monthly_spending = cursor.fetchall()
+
+    # Get last year spending data
+    query = "SELECT SUM(ticket.sold_price) AS last_year_spending FROM ticket, customer WHERE customer.email = %s " \
+            "AND customer.email = ticket.customer_email AND purchase_date_and_time between CURRENT_DATE() - INTERVAL " \
+            "1 YEAR and CURRENT_DATE(); "
+    cursor.execute(query, (username))
+    last_year_spending = cursor.fetchall()
+    if last_year_spending:
+        last_year_spending = str(last_year_spending).replace("[{'last_year_spending': Decimal('", "").replace("')}]", "")
+    else:
+        last_year_spending = 0
     cursor.close()
-    return render_template('customer.html', flights=all_flights, myflights=myflights)
+
+    return render_template('customer.html', last_year_spending=last_year_spending, monthly_spending=monthly_spending, flights=all_flights, myflights=myflights)
 
 # Define route for AirlineStuff
 @app.route('/airlinestaff/')
@@ -94,53 +117,88 @@ def airlinestaff():
 # Authenticates the view flights
 @app.route('/viewFlightsAuth', methods=['GET', 'POST'])
 def viewFlightsAuth():
-    # grabs information from the forms
-    source_city = request.form['source_city']
-    airport_name1 = request.form['airport_name1']
+    if not 'check_status' in request.form:
+        # grabs information from the forms
+        source_city = request.form['source_city']
+        destination_city = request.form['destination_city']
 
-    destination_city = request.form['destination_city']
-    airport_name2 = request.form['airport_name2']
+        airport_name1 = request.form['airport_name1']
+        airport_name2 = request.form['airport_name2']
 
-    departure_date1 = request.form['departure_date1']
-
-    departure_date2 = request.form['departure_date2']
-    arrival_date = request.form['arrival_date']
+        departure_date = request.form['departure_date']
+        arrival_date = request.form['arrival_date']
 
     # cursor used to send queries
     cursor = conn.cursor()
     queried = False
 
-    # If first part is filled
-    if source_city != "" and airport_name1 != "":
-        # executes query
-        query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
-                "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE departure_airport = " \
-                "%s AND city = %s"
-        cursor.execute(query, (airport_name1, source_city))
-        queried = True
-    # If second part is filled
-    elif destination_city != "" and airport_name2 != "":
-        # executes query
-        query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
-                "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE arrival_airport = " \
-                "%s AND city = %s"
-        cursor.execute(query, (airport_name2, destination_city))
-        queried = True
-    # If last part of one way is filled
-    elif departure_date1 != "":
-        # executes query
-        query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
-                "arrival_date_and_time, base_price, ID_num FROM flight WHERE departure_date_and_time = %s'
-        cursor.execute(query, departure_date1)
-        queried = True
-    # If last part of round trip is filled
-    elif departure_date2 != "" and arrival_date != "":
-        # executes query
-        query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, ' \
-                '" \ "arrival_date_and_time, base_price, ID_num FROM flight WHERE departure_date_and_time = %s AND ' \
-                'arrival_date_and_time = %s '
-        cursor.execute(query, (departure_date2, arrival_date))
-        queried = True
+    # If show all is pressed
+    if 'show_all' in request.form:
+        query = query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
+        cursor.execute(query)
+        data1 = cursor.fetchall()
+        cursor.close()
+        return render_template('index.html', flights=data1)
+
+    # If given 2 cities
+    if 'one_way' in request.form:
+        if source_city != "" and destination_city != "":
+            # executes query
+            query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
+                    "arrival_date_and_time, base_price, ID_num  FROM flight WHERE departure_airport = (SELECT name FROM " \
+                    "airport WHERE city = %s) AND arrival_airport = (SELECT name FROM airport WHERE city = %s) AND departure_date_and_time > CURRENT_DATE()"
+            cursor.execute(query, (source_city, destination_city))
+            queried = True
+        # If given 2 airports
+        elif airport_name1 != "" and airport_name2 != "":
+            # executes query
+            query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
+                    "arrival_date_and_time, base_price, ID_num  FROM flight WHERE departure_airport = %s AND " \
+                    "arrival_airport = %s AND departure_date_and_time > CURRENT_DATE()";
+            cursor.execute(query, (airport_name1, airport_name2))
+            queried = True
+    # round trip 2 airports
+    if 'round_trip' in request.form:
+        if airport_name1 != "" and airport_name2 != "" and departure_date != "" and arrival_date != "":
+            # executes query
+            query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, ' \
+                    'arrival_date_and_time, base_price, ID_num  FROM flight WHERE departure_airport = %s AND ' \
+                    'arrival_airport = %s AND departure_date_and_time = %s AND departure_date_and_time > CURRENT_DATE();'
+            cursor.execute(query, (airport_name1, airport_name2, departure_date))
+            result1 = cursor.fetchall()
+
+            query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, ' \
+                    'arrival_date_and_time, base_price, ID_num  FROM flight WHERE departure_airport = %s AND ' \
+                    'arrival_airport = %s AND departure_date_and_time = %s AND departure_date_and_time > CURRENT_DATE();'
+            cursor.execute(query, (airport_name2, airport_name1, arrival_date))
+            result2 = cursor.fetchall()
+            return render_template('index.html', result1=result1, result2=result2)
+
+    if 'check_status' in request.form:
+        status_airline_name = request.form['status_airline_name']
+        status_flight_number = request.form['status_flight_number']
+        status_departure = request.form['status_departure']
+        status_arrival = request.form['status_arrival']
+
+        if status_departure:
+            query = "SELECT the_status FROM set_status WHERE airline = %s AND flight_number = %s AND departure_date_and_time = %s"
+            cursor.execute(query, (status_airline_name, status_flight_number, status_departure))
+        else:
+            query = "SELECT the_status FROM set_status WHERE airline = %s AND flight_number = %s AND arrival_date_and_time = %s"
+            cursor.execute(query, (status_airline_name, status_flight_number, status_arrival))
+
+        status = cursor.fetchall()
+
+        if status:
+            status = str(status).replace("[{'the_status': '", "").replace("'}]", "")
+        else:
+            status = None
+
+        query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
+        cursor.execute(query)
+        data1 = cursor.fetchall()
+        cursor.close()
+        return render_template('index.html', flights=data1, status=status)
 
     if queried:
         # stores the results in a variable
@@ -153,7 +211,7 @@ def viewFlightsAuth():
         else:
             # returns an error message to the html page
             cursor = conn.cursor()
-            query = 'SELECT * FROM flight'
+            query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
             cursor.execute(query)
             data1 = cursor.fetchall()
             cursor.close()
@@ -162,13 +220,12 @@ def viewFlightsAuth():
     else:
         # returns an error message to the html page
         cursor = conn.cursor()
-        query = 'SELECT * FROM flight'
+        query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
         cursor.execute(query)
         data1 = cursor.fetchall()
         cursor.close()
         error = 'Incomplete or incorrect data provided'
         return render_template('index.html', error=error, flights=data1)
-
 
 # Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
@@ -214,7 +271,6 @@ def loginAuth():
         error = 'Invalid login or username'
         #return redirect(url_for('customerAuth'))
         return render_template('login.html', error=error)
-
 
 # Authenticates the register
 @app.route('/registerAuth', methods=['GET', 'POST'])
@@ -309,6 +365,7 @@ def registerAuth():
             cursor.close()
             return render_template('index.html', register="You've been successfully registered as an Airline Staff")
 
+# Handles customer use cases
 @app.route('/customerAuth', methods=['GET', 'POST'])
 def customerAuth():
     username = session['username']
@@ -317,7 +374,7 @@ def customerAuth():
     error = None
     queried = False
 
-    query = 'SELECT * FROM ticket'
+    query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
     cursor.execute(query)
     old_ticket_data = cursor.fetchall()
     cursor.close()
@@ -328,74 +385,101 @@ def customerAuth():
 
     # Search for flights function
     if 'search' in request.form:
+        # grabs information from the forms
         source_city = request.form['source_city']
-        airport_name1 = request.form['airport_name1']
-
         destination_city = request.form['destination_city']
+
+        airport_name1 = request.form['airport_name1']
         airport_name2 = request.form['airport_name2']
 
-        departure_date1 = request.form['departure_date1']
-
-        departure_date2 = request.form['departure_date2']
+        departure_date = request.form['departure_date']
         arrival_date = request.form['arrival_date']
 
-        # If first part is filled
-        if source_city != "" and airport_name1 != "":
-            # executes query
-            query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
-                    "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE departure_airport = " \
-                    "%s AND city = %s"
-            cursor.execute(query, (airport_name1, source_city))
-            queried = True
-        # If second part is filled
-        elif destination_city != "" and airport_name2 != "":
-            # executes query
-            query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
-                    "arrival_date_and_time, base_price, ID_num FROM flight natural join airport WHERE arrival_airport = " \
-                    "%s AND city = %s"
-            cursor.execute(query, (airport_name2, destination_city))
-            queried = True
-        # If last part of one way is filled
-        elif departure_date1 != "":
-            # executes query
-            query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
-                           "arrival_date_and_time, base_price, ID_num FROM flight WHERE departure_date_and_time = %s'
-            cursor.execute(query, departure_date1)
-            queried = True
-        # If last part of round trip is filled
-        elif departure_date2 != "" and arrival_date != "":
-            # executes query
-            query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, ' \
-                    '" \ "arrival_date_and_time, base_price, ID_num FROM flight WHERE departure_date_and_time = %s AND ' \
-                    'arrival_date_and_time = %s '
-            cursor.execute(query, (departure_date2, arrival_date))
-            queried = True
-        else:
-            error = "You're missing information required to search for a flight"
+        # cursor used to send queries
+        cursor = conn.cursor()
+        queried = False
 
-    # Perform action on flight (purchase ticket, cancel trip)
-    if 'purchase' in request.form or 'cancel' in request.form:
+        # If show all is pressed
+        if 'show_all' in request.form:
+            query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
+            cursor.execute(query)
+            data1 = cursor.fetchall()
+            cursor.close()
+            return render_template('index.html', flights=data1)
+
+        # If given 2 cities
+        if 'one_way' in request.form:
+            if source_city != "" and destination_city != "":
+                # executes query
+                query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
+                        "arrival_date_and_time, base_price, ID_num  FROM flight WHERE departure_airport = (SELECT name FROM " \
+                        "airport WHERE city = %s) AND arrival_airport = (SELECT name FROM airport WHERE city = %s) AND departure_date_and_time > CURRENT_DATE()"
+                cursor.execute(query, (source_city, destination_city))
+                queried = True
+            # If given 2 airports
+            elif airport_name1 != "" and airport_name2 != "":
+                # executes query
+                query = "SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, " \
+                        "arrival_date_and_time, base_price, ID_num  FROM flight WHERE departure_airport = %s AND " \
+                        "arrival_airport = %s AND departure_date_and_time > CURRENT_DATE()";
+                cursor.execute(query, (airport_name1, airport_name2))
+                queried = True
+        # round trip 2 airports
+        if 'round_trip' in request.form:
+            if airport_name1 != "" and airport_name2 != "" and departure_date != "" and arrival_date != "":
+                # executes query
+                query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, ' \
+                        'arrival_date_and_time, base_price, ID_num  FROM flight WHERE departure_airport = %s AND ' \
+                        'arrival_airport = %s AND departure_date_and_time = %s AND departure_date_and_time > CURRENT_DATE();'
+                cursor.execute(query, (airport_name1, airport_name2, departure_date))
+                result1 = cursor.fetchall()
+
+                query = 'SELECT airline, flight_number, departure_airport, departure_date_and_time, arrival_airport, ' \
+                        'arrival_date_and_time, base_price, ID_num  FROM flight WHERE departure_airport = %s AND ' \
+                        'arrival_airport = %s AND departure_date_and_time = %s AND departure_date_and_time > CURRENT_DATE();'
+                cursor.execute(query, (airport_name2, airport_name1, arrival_date))
+                result2 = cursor.fetchall()
+                return render_template('index.html', result1=result1, result2=result2)
+
+    # Purchasing ticket
+    if 'purchase' in request.form:
         airline = request.form['p_airline']
         flight_number = request.form['p_flight_number']
         departure_date = request.form['p_departure_date']
-        base_price = request.form['p_base_price']
+
+        card_type = request.form['card_type']
+        card_num = request.form['card_num']
+        card_name = request.form['card_name']
+        expiration_date = request.form['expiration_date']
+        purchase_data = [airline, flight_number, departure_date, card_type, card_num, card_name, expiration_date]
+
+        if None not in purchase_data:
+            # Update the ticket with all this data
+            query = "INSERT INTO ticket (ticket_id, customer_email, airline, flight_number, sold_price, departure_date_and_time, card_type, card_num, card_name, expiration_date, purchase_date_and_time) SELECT DISTINCT '', %s, %s, %s, flight.base_price, %s, %s, %s, %s, %s, CURRENT_DATE() FROM flight, airplane, ticket WHERE (SELECT COUNT(ticket.ticket_id) as seats_reserved FROM flight, ticket, airplane WHERE ticket.flight_number = %s AND flight.flight_number = ticket.flight_number AND flight.airplane_id_num = airplane.ID_num) < (0.6 * (SELECT DISTINCT airplane.number_of_seats FROM flight, ticket, airplane WHERE ticket.flight_number = %s AND flight.flight_number = ticket.flight_number AND flight.airplane_id_num = airplane.ID_num)) AND flight.flight_number = %s AND flight.airplane_id_num = airplane.ID_num;"
+            cursor.execute(query, (username, airline, flight_number, departure_date, card_type, card_num, card_name,  expiration_date, flight_number, flight_number, flight_number))
+            conn.commit()
+
+            # Part 2
+            query = "INSERT INTO ticket (ticket_id, customer_email, airline, flight_number, sold_price, departure_date_and_time, card_type, card_num, card_name, expiration_date, purchase_date_and_time) SELECT DISTINCT '', '', %s, %s, 1.25 * flight.base_price, %s, %s, %s, %s, %s, %s FROM flight, airplane, ticket WHERE (SELECT COUNT(ticket.ticket_id) as seats_reserved FROM flight, ticket, airplane WHERE ticket.flight_number = %s AND flight.flight_number = ticket.flight_number AND flight.airplane_id_num = airplane.ID_num) >= (0.6 * (SELECT DISTINCT airplane.number_of_seats FROM flight, ticket, airplane WHERE ticket.flight_number = '123' AND flight.flight_number = ticket.flight_number AND flight.airplane_id_num = airplane.ID_num)) AND flight.flight_number = %s AND flight.airplane_id_num = airplane.ID_num;"
+            cursor.execute(query, (username, airline, flight_number, departure_date, card_type, card_num, card_name, expiration_date, flight_number, flight_number, flight_number))
+            conn.commit()
+
+        else:
+            error = "Missing information to purchase a flight"
+
+    # Canceling ticket
+    if 'cancel' in request.form:
+        airline = request.form['p_airline']
+        flight_number = request.form['p_flight_number']
+        departure_date = request.form['p_departure_date']
 
         if airline != "" and flight_number != "" and departure_date != "":
-            # if click purchase:
-            if 'purchase' in request.form:
-                query = "UPDATE ticket SET customer_email = %s WHERE airline = %s AND flight_number = %s AND departure_date_and_time = %s AND sold_price = %s AND customer_email IS NULL or customer_email = '' ORDER BY ticket_id LIMIT 1;"
-                cursor.execute(query, (username, airline, flight_number, departure_date, base_price))
-                conn.commit()
-                queried = True
-
-            # if click cancel:
-            if 'cancel' in request.form:
-                query = "UPDATE ticket SET customer_email = '' WHERE airline = %s AND flight_number = %s AND departure_date_and_time = %s AND sold_price = %s AND customer_email = %s ORDER BY ticket_id LIMIT 1;"
-                cursor.execute(query, (airline, flight_number, departure_date, base_price, username))
-                conn.commit()
-                queried = True
+            query = "DELETE FROM ticket WHERE customer_email = %s AND airline = %s AND flight_number = %s AND departure_date_and_time = %s"
+            cursor.execute(query, (username, airline, flight_number, departure_date))
+            conn.commit()
+            queried = True
         else:
-            error = "You're missing information required to perform an action on a ticket"
+            error = "Missing information to cancel a ticket"
 
     # Rate or comment on prev flight
     if 'submit_review' in request.form:
@@ -450,11 +534,48 @@ def customerAuth():
 
         # If Track My Spending: is filled
         if start_date != "" and end_date != "":
-            # executes query
+            # Get last 6 month spending data
+            query = "SELECT SUM(ticket.sold_price) as total_spend, MONTH (ticket.purchase_date_and_time) AS Month FROM " \
+                    "ticket, customer WHERE customer.email = %s AND customer.email = ticket.customer_email AND " \
+                    "ticket.purchase_date_and_time between %s and %s GROUP BY " \
+                    "Month desc; "
+            cursor.execute(query, (username, start_date, end_date))
+            range_spending = cursor.fetchall()
+
+            # Gets all available flights
             cursor = conn.cursor()
-            query = 'SELECT SUM(sold_price) from ticket WHERE purchase_date_and_time > %s \
-                                                        AND purchase_date_and_time < %s'
-            cursor.execute(query, (start_date, end_date))
+            query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
+            cursor.execute(query)
+            all_flights = cursor.fetchall()
+
+            # View My flights:
+            query = "SELECT ticket.airline, ticket.flight_number, departure_airport, ticket.departure_date_and_time, arrival_airport, arrival_date_and_time, base_price, ID_num FROM flight, ticket WHERE customer_email = %s AND flight.airline = ticket.airline AND flight.flight_number = ticket.flight_number AND flight.departure_date_and_time = ticket.departure_date_and_time;"
+            cursor.execute(query, (username))
+            myflights = cursor.fetchall()
+
+            # Get last 6 month spending data
+            query = "SELECT SUM(ticket.sold_price) as total_spend, MONTH (ticket.purchase_date_and_time) AS Month FROM " \
+                    "ticket, customer WHERE customer.email = %s AND customer.email = ticket.customer_email AND " \
+                    "ticket.purchase_date_and_time between CURRENT_DATE() - INTERVAL 6 MONTH and CURRENT_DATE() GROUP BY " \
+                    "Month desc; "
+            cursor.execute(query, (username))
+            monthly_spending = cursor.fetchall()
+
+            # Get last year spending data
+            query = "SELECT SUM(ticket.sold_price) AS last_year_spending FROM ticket, customer WHERE customer.email = %s " \
+                    "AND customer.email = ticket.customer_email AND purchase_date_and_time between CURRENT_DATE() - INTERVAL " \
+                    "1 YEAR and CURRENT_DATE(); "
+            cursor.execute(query, (username))
+            last_year_spending = cursor.fetchall()
+            if last_year_spending:
+                last_year_spending = str(last_year_spending).replace("[{'last_year_spending': Decimal('", "").replace(
+                    "')}]", "")
+            else:
+                last_year_spending = 0
+            cursor.close()
+
+            return render_template('customer.html', range_spending=range_spending, last_year_spending=last_year_spending,
+                                   monthly_spending=monthly_spending, flights=all_flights, myflights=myflights)
         else:
             error = "You're missing information required to track your spending"
 
@@ -479,26 +600,77 @@ def customerAuth():
                 if 'cancel' in request.form:
                     error = "You haven't purchased the ticket you're trying to cancel"
         else:
+            # Gets all available flights
+            cursor = conn.cursor()
+            query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
+            cursor.execute(query)
+            all_flights = cursor.fetchall()
+
             # View My flights:
             query = "SELECT ticket.airline, ticket.flight_number, departure_airport, ticket.departure_date_and_time, arrival_airport, arrival_date_and_time, base_price, ID_num FROM flight, ticket WHERE customer_email = %s AND flight.airline = ticket.airline AND flight.flight_number = ticket.flight_number AND flight.departure_date_and_time = ticket.departure_date_and_time;"
-            cursor.execute(query, (session['username']))
-            data2 = cursor.fetchall()
+            cursor.execute(query, (username))
+            myflights = cursor.fetchall()
+
+            # Get last 6 month spending data
+            query = "SELECT SUM(ticket.sold_price) as total_spend, MONTH (ticket.purchase_date_and_time) AS Month FROM " \
+                    "ticket, customer WHERE customer.email = %s AND customer.email = ticket.customer_email AND " \
+                    "ticket.purchase_date_and_time between CURRENT_DATE() - INTERVAL 6 MONTH and CURRENT_DATE() GROUP BY " \
+                    "Month desc; "
+            cursor.execute(query, (username))
+            monthly_spending = cursor.fetchall()
+
+            # Get last year spending data
+            query = "SELECT SUM(ticket.sold_price) AS last_year_spending FROM ticket, customer WHERE customer.email = %s " \
+                    "AND customer.email = ticket.customer_email AND purchase_date_and_time between CURRENT_DATE() - INTERVAL " \
+                    "1 YEAR and CURRENT_DATE(); "
+            cursor.execute(query, (username))
+            last_year_spending = cursor.fetchall()
+            if last_year_spending:
+                last_year_spending = str(last_year_spending).replace("[{'last_year_spending': Decimal('", "").replace(
+                    "')}]", "")
+            else:
+                last_year_spending = 0
             cursor.close()
-            return render_template('customer.html', success=success, error=error, flights=data, myflights=data2)
 
-    # Gets all available flights
-    cursor = conn.cursor()
-    query = 'SELECT * FROM flight'
-    cursor.execute(query)
-    data1 = cursor.fetchall()
+            return render_template('customer.html', last_year_spending=last_year_spending,
+                                   monthly_spending=monthly_spending, flights=all_flights, myflights=myflights)
 
-    # View My flights:
-    query = "SELECT ticket.airline, ticket.flight_number, departure_airport, ticket.departure_date_and_time, arrival_airport, arrival_date_and_time, base_price, ID_num FROM flight, ticket WHERE customer_email = %s AND flight.airline = ticket.airline AND flight.flight_number = ticket.flight_number AND flight.departure_date_and_time = ticket.departure_date_and_time;"
-    cursor.execute(query, (session['username']))
-    data2 = cursor.fetchall()
-    cursor.close()
-    return render_template('customer.html', success=success, error=error, flights=data1, myflights=data2)
+        # Gets all available flights
+        cursor = conn.cursor()
+        query = 'SELECT * FROM flight WHERE departure_date_and_time > CURRENT_DATE()'
+        cursor.execute(query)
+        all_flights = cursor.fetchall()
 
+        # View My flights:
+        query = "SELECT ticket.airline, ticket.flight_number, departure_airport, ticket.departure_date_and_time, arrival_airport, arrival_date_and_time, base_price, ID_num FROM flight, ticket WHERE customer_email = %s AND flight.airline = ticket.airline AND flight.flight_number = ticket.flight_number AND flight.departure_date_and_time = ticket.departure_date_and_time;"
+        cursor.execute(query, (username))
+        myflights = cursor.fetchall()
+
+        # Get last 6 month spending data
+        query = "SELECT SUM(ticket.sold_price) as total_spend, MONTH (ticket.purchase_date_and_time) AS Month FROM " \
+                "ticket, customer WHERE customer.email = %s AND customer.email = ticket.customer_email AND " \
+                "ticket.purchase_date_and_time between CURRENT_DATE() - INTERVAL 6 MONTH and CURRENT_DATE() GROUP BY " \
+                "Month desc;"
+        cursor.execute(query, (username))
+        monthly_spending = cursor.fetchall()
+
+        # Get last year spending data
+        query = "SELECT SUM(ticket.sold_price) AS last_year_spending FROM ticket, customer WHERE customer.email = %s " \
+                "AND customer.email = ticket.customer_email AND purchase_date_and_time between CURRENT_DATE() - INTERVAL " \
+                "1 YEAR and CURRENT_DATE();"
+        cursor.execute(query, (username))
+        last_year_spending = cursor.fetchall()
+        if last_year_spending:
+            last_year_spending = str(last_year_spending).replace("[{'last_year_spending': Decimal('", "").replace(
+                "')}]", "")
+        else:
+            last_year_spending = 0
+        cursor.close()
+
+        return render_template('customer.html', last_year_spending=last_year_spending,
+                               monthly_spending=monthly_spending, flights=all_flights, myflights=myflights)
+
+# Handles airline staff use cases
 @app.route('/airlinestaffAuth', methods=['GET', 'POST'])
 def airlinestaffAuth():
     username = session['username']
@@ -560,7 +732,7 @@ def airlinestaffAuth():
     if 'view_report' in request.form:
         start_date = request.form['start_date']
         end_date = request.form['end_date']
-    
+
     # cursor used to send queries
     cursor = conn.cursor()
     queried = False
