@@ -1,0 +1,133 @@
+insert into Airline values ('United');
+
+
+
+insert into Airline_staff values ('admin', MD5('abcd'), 'Roe', 'Jones', '1978-05-25','United');
+
+insert into phone_number values ('admin', '111-2222-3333');
+insert into phone_number values ('admin', '444-5555-6666');
+
+insert into email_address values ('admin', 'staff@nyu.edu');
+
+
+
+insert into Airplane values ('United', '1', '4', 'Boeing', '10');
+insert into Airplane values ('United', '2', '4', 'Airbus', '12');
+insert into Airplane values ('United', '3', '50', 'Boeing', '8');
+
+
+
+insert into Airport values ('JFK', 'NYC', 'USA');
+insert airport_type values ('JFK', 'both');
+
+insert into Airport values ('BOS', 'Boston', 'USA');
+insert airport_type values ('BOS', 'both');
+
+insert into Airport values ('PVG', 'Shanghai', 'China');
+insert airport_type values ('PVG', 'both');
+
+insert into Airport values ('BEI', 'Beijing', 'China');
+insert airport_type values ('BEI', 'both');
+
+insert into Airport values ('SFO', 'San Francisco', 'USA');
+insert airport_type values ('SFO', 'both');
+
+insert into Airport values ('LAX', 'Los Angeles', 'USA');
+insert airport_type values ('LAX', 'both');
+
+insert into Airport values ('HKA', 'Hong Kong', 'China');
+insert airport_type values ('HKA', 'both');
+
+insert into Airport values ('SHEN', 'Shenzhen', 'China');
+insert airport_type values ('SHEN', 'both');
+
+
+
+insert into Customer values ('Test Customer 1', 'testcustomer@nyu.edu', MD5('1234'), '1555', 'Jay St', 'Brooklyn', 'New York', '123-4321-4321', '54321', '2025-12-24', 'USA', '1999-12-19');
+
+insert into Customer values ('User 1', 'user1@nyu.edu', MD5('1234'), '5405', 'Jay Street', 'Brooklyn', 'New York', '123-4322-4322', '54322', '2025-12-25', 'USA', '1999-11-19');
+
+insert into Customer values ('User 2', 'user2@nyu.edu', MD5('1234'), '1702', 'Jay Street', 'Brooklyn', 'New York', '123-4323-4323', '54323', '2025-10-24', 'USA', '1999-10-19');
+
+insert into Customer values ('User 3', 'user3@nyu.edu', MD5('1234'), '1890', 'Jay Street', 'Brooklyn', 'New York', '123-4324-4324', '54324', '2025-09-24', 'USA', '1999-09-19');
+
+
+
+insert into Flight values ('United', '102', '3', 'SFO', '2022-09-12 13:25:25', 'LAX', '2022-09-12 16:50:25', '300');
+insert into Set_status values ('admin', 'United', '102', '2022-09-12 13:25:25', '2022-09-12 16:50:25', 'on-time');
+
+insert into Flight values ('United', '104', '3', 'PVG', '2022-10-04 13:25:25', 'BEI', '2022-10-04 16:50:25', '300');
+insert into Set_status values ('admin', 'United', '104', '2022-10-04 13:25:25', '2022-10-04 16:50:25', 'on-time');
+
+insert into Flight values ('United', '106', '3', 'SFO', '2022-08-04 13:25:25', 'LAX', '2022-08-04 16:50:25', '350');
+insert into Set_status values ('admin', 'United', '106', '2022-08-04 13:25:25', '2022-08-04 16:50:25', 'delayed');
+
+insert into Flight values ('United', '206', '2', 'SFO', '2023-02-04 13:25:25', 'SFO', '2023-02-04 16:50:25', '400');
+insert into Set_status values ('admin', 'United', '206', '2023-02-04 13:25:25', '2023-02-04 16:50:25', 'on-time');
+
+insert into Flight values ('United', '207', '2', 'LAX', '2023-03-04 13:25:25', 'SFO', '2023-03-04 16:50:25', '300');
+insert into Set_status values ('admin', 'United', '207', '2023-03-04 13:25:25', '2023-03-04 16:50:25', 'on-time');
+
+insert into Flight values ('United', '134', '3', 'JFK', '2022-07-12 13:25:25', 'BOS', '2022-07-12 16:50:25', '300');
+insert into Set_status values ('admin', 'United', '134', '2022-07-12 13:25:25', '2022-07-12 16:50:25', 'delayed');
+
+insert into Flight values ('United', '296', '1', 'PVG', '2022-12-30 13:25:25', 'SFO', '2022-12-30 16:50:25', '3000');
+insert into Set_status values ('admin', 'United', '296', '2022-12-30 13:25:25', '2022-12-30 16:50:25', 'on-time');
+
+insert into Flight values ('United', '715', '1', 'PVG', '2022-09-28 10:25:25', 'BEI', '2022-09-28 13:50:25', '500');
+insert into Set_status values ('admin', 'United', '715', '2022-09-28 10:25:25', '2022-12-30 16:50:25', 'delayed');
+
+insert into Flight values ('United', '839', '13', 'SHEN', '2021-12-26 13:25:25', 'BEI', '2021-12-26 16:50:25', '300');
+insert into Set_status values ('admin', 'United', '839', '2021-12-26 13:25:25', '2021-12-26 16:50:25', 'on-time');
+
+
+
+insert into Ticket values ('1', 'testcustomer@nyu.edu', 'United', '102', '300', '2022-09-12 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-08-04 11:55:55');
+
+insert into Ticket values ('2', 'user1@nyu.edu', 'United', '102', '300', '2022-09-12 13:25:25', 'credit', '1111-2222-3333-5555', 'User 1', '2023-03-01 11:55:55', '2022-08-03 11:55:55');
+
+insert into Ticket values ('3', 'user2@nyu.edu', 'United', '102', '300', '2022-09-12 13:25:25', 'credit', '1111-2222-3333-5555', 'User 2', '2023-03-01 11:55:55', '2022-09-04 11:55:55');
+
+insert into Ticket values ('4', 'user1@nyu.edu', 'United', '104', '300', '2022-10-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 1', '2023-03-01 11:55:55', '2022-08-21 11:55:55');
+
+insert into Ticket values ('5', 'testcustomer@nyu.edu', 'United', '104', '300', '2022-10-04 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-09-28 11:55:55');
+
+insert into Ticket values ('6', 'testcustomer@nyu.edu', 'United', '106', '350', '2022-08-04 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-08-02 11:55:55');
+
+insert into Ticket values ('7', 'user3@nyu.edu', 'United', '106', '350', '2022-08-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 3', '2023-03-01 11:55:55', '2022-07-03 11:55:55');
+
+insert into Ticket values ('8', 'user3@nyu.edu', 'United', '839', '300', '2021-12-26 13:25:25', 'credit', '1111-2222-3333-5555', 'User 3', '2023-03-01 11:55:55', '2021-12-03 11:55:55');
+
+insert into Ticket values ('9', 'user3@nyu.edu', 'United', '102', '300', '2022-09-12 13:25:25', 'credit', '1111-2222-3333-5555', 'User 3', '2023-03-01 11:55:55', '2022-07-04 11:55:55');
+
+insert into Ticket values ('11', 'user3@nyu.edu', 'United', '134', '300', '2022-07-12 13:25:25', 'credit', '1111-2222-3333-5555', 'User 3', '2023-03-01 11:55:55', '2022-05-23 11:55:55');
+
+insert into Ticket values ('12', 'testcustomer@nyu.edu', 'United', '715', '500', '2022-09-28 10:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-05-02 11:55:55');
+
+insert into Ticket values ('14', 'user3@nyu.edu', 'United', '206', '400', '2023-02-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 3', '2023-03-01 11:55:55', '2022-11-20 11:55:55');
+
+insert into Ticket values ('15', 'user1@nyu.edu', 'United', '206', '400', '2023-02-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 1', '2023-03-01 11:55:55', '2022-11-21 11:55:55');
+
+insert into Ticket values ('16', 'user2@nyu.edu', 'United', '206', '400', '2023-02-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 2', '2023-03-01 11:55:55', '2022-09-19 11:55:55');
+
+insert into Ticket values ('17', 'user1@nyu.edu', 'United', '207', '300', '2023-03-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 1', '2023-03-01 11:55:55', '2022-08-11 11:55:55');
+
+insert into Ticket values ('18', 'testcustomer@nyu.edu', 'United', '207', '300', '2023-03-04 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-05-02 11:55:55');
+
+insert into Ticket values ('19', 'testcustomer@nyu.edu', 'United', '296', '3000', '2022-12-30 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-11-22 11:55:55');
+
+insert into Ticket values ('20', 'testcustomer@nyu.edu', 'United', '296', '3000', '2022-12-30 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-07-12 11:55:55');
+
+
+
+insert into Review values ('testcustomer@nyu.edu', 'United', '102', '2022-09-12 13:25:25', '4', 'Very Comfortable');
+
+insert into Review values ('user1@nyu.edu', 'United', '102', '2022-09-12 13:25:25', '5', 'Relaxing, check-in and onboarding very professional');
+
+insert into Review values ('user2@nyu.edu', 'United', '102', '2022-09-12 13:25:25', '3', 'Satisfied and will use the same flight again');
+
+insert into Review values ('testcustomer@nyu.edu', 'United', '104', '2022-10-04 13:25:25', '1', 'Customer Care services are not good');
+
+insert into Review values ('user1@nyu.edu', 'United', '104', '2022-10-04 13:25:25', '5', 'Comfortable journey and Professional');
+
+

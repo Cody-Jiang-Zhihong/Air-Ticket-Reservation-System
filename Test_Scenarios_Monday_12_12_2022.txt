@@ -1,0 +1,314 @@
+Test_Scenarios_Monday_12_12_2022.txt
+
+
+
+Add an airline name as follows:
+Airline name: United
+
+insert into Airline values ('United');
+
+
+
+Add an airline staff as follows:
+Username: admin, password: abcd, firstname: Roe, lastname: Jones, date of birth: 1978-05-
+25, airline name: United, Phone numbers: 111-2222-3333, 444-5555-6666, email:
+staff@nyu.edu.
+
+insert into Airline_staff values ('admin', MD5('abcd'), 'Roe', 'Jones', '1978-05-25','United');
+
+insert into phone_number values ('admin', '111-2222-3333');
+insert into phone_number values ('admin', '444-5555-6666');
+
+insert into email_address values ('admin', 'staff@nyu.edu');
+
+
+
+Add 3 airplanes as follows:
+Airline name: United, id: 1, seats: 4, Manufacturing Company: Boeing, Age: 10
+Airline name: United, id: 2, seats: 4, Manufacturing Company: Airbus, Age: 12
+Airline name: United, id: 3, seats: 50, Manufacturing Company: Boeing, Age: 8
+
+
+insert into Airplane values ('United', '1', '4', 'Boeing', '10');
+insert into Airplane values ('United', '2', '4', 'Airbus', '12');
+insert into Airplane values ('United', '3', '50', 'Boeing', '8');
+
+
+Add 8 airports as follows:
+Airport name: JFK, City: NYC, Country: USA, Airport Type: Both
+Airport name: BOS, City: Boston, Country: USA, Airport Type: Both
+Airport name: PVG, City: Shanghai, Country: China, Airport Type: Both
+Airport name: BEI, City: Beijing, Country: China, Airport Type: Both
+Airport name: SFO, City: San Francisco, Country: USA, Airport Type: Both
+Airport name: LAX, City: Los Angeles, Country: USA, Airport Type: Both
+Airport name: HKA, City: Hong Kong, Country: China, Airport Type: Both
+Airport name: SHEN City: Shenzhen, Country: China, Airport Type: Both.
+
+insert into Airport values ('JFK', 'NYC', 'USA');
+insert airport_type values ('JFK', 'both');
+
+insert into Airport values ('BOS', 'Boston', 'USA');
+insert airport_type values ('BOS', 'both');
+
+insert into Airport values ('PVG', 'Shanghai', 'China');
+insert airport_type values ('PVG', 'both');
+
+insert into Airport values ('BEI', 'Beijing', 'China');
+insert airport_type values ('BEI', 'both');
+
+insert into Airport values ('SFO', 'San Francisco', 'USA');
+insert airport_type values ('SFO', 'both');
+
+insert into Airport values ('LAX', 'Los Angeles', 'USA');
+insert airport_type values ('LAX', 'both');
+
+insert into Airport values ('HKA', 'Hong Kong', 'China');
+insert airport_type values ('HKA', 'both');
+
+insert into Airport values ('SHEN', 'Shenzhen', 'China');
+insert airport_type values ('SHEN', 'both');
+
+
+Add 4 customers as follows:
+Email: testcustomer@nyu.edu, password: 1234, name: Test Customer 1, building number:
+1555, street: Jay St, city: Brooklyn, state: New York, phone number: 123-4321-4321,
+passport number: 54321, passport expiration date: 2025-12-24, passport country: USA, date
+of birth: 1999-12-19.
+Email: user1@nyu.edu, password: 1234, name: User 1, building number: 5405, street: Jay
+Street, city: Brooklyn, state: New York, phone number: 123-4322-4322, passport number:
+54322, passport expiration date: 2025-12-25, passport country: USA, date of birth: 1999-11-
+19.
+Email: user2@nyu.edu, password: 1234, name: User 2, building number: 1702, street: Jay
+Street, city: Brooklyn, state: New York, phone number: 123-4323-4323, passport number:
+54323, passport expiration date: 2025-10-24, passport country: USA, date of birth: 1999-10-
+19.
+Email: user3@nyu.edu, password: 1234, name: User 3, building number: 1890, street: Jay
+Street, city: Brooklyn, state: New York, phone number: 123-4324-4324, passport number:
+54324, passport expiration date: 2025-09-24, passport country: USA, date of birth: 1999-09-
+19.
+
+insert into Customer values ('Test Customer 1', 'testcustomer@nyu.edu', MD5('1234'), '1555', 'Jay St', 'Brooklyn', 'New York', '123-4321-4321', '54321', '2025-12-24', 'USA', '1999-12-19');
+
+insert into Customer values ('User 1', 'user1@nyu.edu', MD5('1234'), '5405', 'Jay Street', 'Brooklyn', 'New York', '123-4322-4322', '54322', '2025-12-25', 'USA', '1999-11-19');
+
+insert into Customer values ('User 2', 'user2@nyu.edu', MD5('1234'), '1702', 'Jay Street', 'Brooklyn', 'New York', '123-4323-4323', '54323', '2025-10-24', 'USA', '1999-10-19');
+
+insert into Customer values ('User 3', 'user3@nyu.edu', MD5('1234'), '1890', 'Jay Street', 'Brooklyn', 'New York', '123-4324-4324', '54324', '2025-09-24', 'USA', '1999-09-19');
+
+
+Create/add 9 flights as follows:
+Airline name: United, flight number: 102, departure airport: SFO, departure date and time:
+2022-09-12 13:25:25, arrival airport: LAX, arrival date and time: 2022-09-12 16:50:25, base
+price: 300, status: on-time, airplane id: 3
+Airline name: United, flight number: 104, departure airport: PVG, departure date and time:
+2022-10-04 13:25:25, arrival airport: BEI, arrival date and time: 2022-10-04 16:50:25, base
+price: 300, status: on-time, airplane id: 3
+Airline name: United, flight number: 106, departure airport: SFO, departure date and time:
+2022-08-04 13:25:25, arrival airport: LAX, arrival date and time: 2022-08-04 16:50:25, base
+price: 350, status: delayed, airplane id: 3
+Airline name: United, flight number: 206, departure airport: SFO, departure date and time:
+2023-02-04 13:25:25, arrival airport: LAX, arrival date and time: 2023-02-04 16:50:25, base
+price: 400, status: on-time, airplane id: 2
+Airline name: United, flight number: 207, departure airport: LAX, departure date and time:
+2023-03-04 13:25:25, arrival airport: SFO, arrival date and time: 2023-03-04 16:50:25, base
+price: 300, status: on-time, airplane id: 2
+Airline name: United, flight number: 134, departure airport: JFK, departure date and time:
+2022-07-12 13:25:25, arrival airport: BOS, arrival date and time: 2022-07-12 16:50:25, base
+price: 300, status: delayed, airplane id: 3
+Airline name: United, flight number: 296, departure airport: PVG, departure date and time:
+2022-12-30 13:25:25, arrival airport: SFO, arrival date and time: 2022-12-30 16:50:25, base
+price: 3000, status: on-time, airplane id: 1
+Airline name: United, flight number: 715, departure airport: PVG, departure date and time:
+2022-09-28 10:25:25, arrival airport: BEI, arrival date and time: 2022-09-28 13:50:25, base
+price: 500, status: delayed, airplane id: 1
+Airline name: United, flight number: 839, departure airport: SHEN, departure date and time:
+2021-12-26 13:25:25, arrival airport: BEI, arrival date and time: 2021-12-26 16:50:25, base
+price: 300, status: on-time, airplane id: 3
+
+insert into Flight values ('United', '102', '3', 'SFO', '2022-09-12 13:25:25', 'LAX', '2022-09-12 16:50:25', '300');
+insert into Set_status values ('admin', 'United', '102', '2022-09-12 13:25:25', '2022-09-12 16:50:25', 'on-time');
+
+insert into Flight values ('United', '104', '3', 'PVG', '2022-10-04 13:25:25', 'BEI', '2022-10-04 16:50:25', '300');
+insert into Set_status values ('admin', 'United', '104', '2022-10-04 13:25:25', '2022-10-04 16:50:25', 'on-time');
+
+insert into Flight values ('United', '106', '3', 'SFO', '2022-08-04 13:25:25', 'LAX', '2022-08-04 16:50:25', '350');
+insert into Set_status values ('admin', 'United', '106', '2022-08-04 13:25:25', '2022-08-04 16:50:25', 'delayed');
+
+insert into Flight values ('United', '206', '2', 'SFO', '2023-02-04 13:25:25', 'SFO', '2023-02-04 16:50:25', '400');
+insert into Set_status values ('admin', 'United', '206', '2023-02-04 13:25:25', '2023-02-04 16:50:25', 'on-time');
+
+insert into Flight values ('United', '207', '2', 'LAX', '2023-03-04 13:25:25', 'SFO', '2023-03-04 16:50:25', '300');
+insert into Set_status values ('admin', 'United', '207', '2023-03-04 13:25:25', '2023-03-04 16:50:25', 'on-time');
+
+insert into Flight values ('United', '134', '3', 'JFK', '2022-07-12 13:25:25', 'BOS', '2022-07-12 16:50:25', '300');
+insert into Set_status values ('admin', 'United', '134', '2022-07-12 13:25:25', '2022-07-12 16:50:25', 'delayed');
+
+insert into Flight values ('United', '296', '1', 'PVG', '2022-12-30 13:25:25', 'SFO', '2022-12-30 16:50:25', '3000');
+insert into Set_status values ('admin', 'United', '296', '2022-12-30 13:25:25', '2022-12-30 16:50:25', 'on-time');
+
+insert into Flight values ('United', '715', '1', 'PVG', '2022-09-28 10:25:25', 'BEI', '2022-09-28 13:50:25', '500');
+insert into Set_status values ('admin', 'United', '715', '2022-09-28 10:25:25', '2022-12-30 16:50:25', 'delayed');
+
+insert into Flight values ('United', '839', '13', 'SHEN', '2021-12-26 13:25:25', 'BEI', '2021-12-26 16:50:25', '300');
+insert into Set_status values ('admin', 'United', '839', '2021-12-26 13:25:25', '2021-12-26 16:50:25', 'on-time');
+
+
+Add 18 tickets as follows & Add/Create purchase records as follows:
+Add 18 tickets as follows:
+Ticket ID: 1, airline name: United, flight number: 102, departure date and time: 2022-09-12
+13:25:25
+Ticket ID: 2, airline name: United, flight number: 102, departure date and time: 2022-09-12
+13:25:25
+Ticket ID: 3, airline name: United, flight number: 102, departure date and time: 2022-09-12
+13:25:25
+Ticket ID: 4, airline name: United, flight number: 104, departure date and time: 2022-10-04
+13:25:25
+Ticket ID: 5, airline name: United, flight number: 104, departure date and time: 2022-10-04
+13:25:25
+Ticket ID: 6, airline name: United, flight number: 106, departure date and time: 2022-08-04
+13:25:25
+Ticket ID: 7, airline name: United, flight number: 106, departure date and time: 2022-08-04
+13:25:25
+Ticket ID: 8, airline name: United, flight number: 839, departure date and time: 2021-12-26
+13:25:25
+Ticket ID: 9, airline name: United, flight number: 102, departure date and time: 2022-09-12
+13:25:25
+Ticket ID: 11, airline name: United, flight number: 134, departure date and time: 2022-07-12
+13:25:25
+Ticket ID: 12, airline name: United, flight number: 715, departure date and time: 2022-09-28
+10:25:25
+Ticket ID: 14, airline name: United, flight number: 206, departure date and time: 2023-02-04
+13:25:25
+Ticket ID: 15, airline name: United, flight number: 206, departure date and time: 2023-02-04
+13:25:25
+Ticket ID: 16, airline name: United, flight number: 206, departure date and time: 2023-02-04
+13:25:25
+Ticket ID: 17, airline name: United, flight number: 207, departure date and time: 2023-03-04
+13:25:25
+Ticket ID: 18, airline name: United, flight number: 207, departure date and time: 2023-03-04
+13:25:25
+Ticket ID: 19, airline name: United, flight number: 296, departure date and time: 2022-12-30
+13:25:25
+Ticket ID: 20, airline name: United, flight number: 296, departure date and time: 2022-12-30
+13:25:25
+Add/Create purchase records as follows:
+Ticket id: 1, customer email: testcustomer@nyu.edu, purchase date: 2022-08-04, purchase
+time: 11:55:55, sold price: 300, card type: credit, card number: 1111-2222-3333-4444, name
+on card: Test Customer 1, Expiration Date: 03/2023)
+Ticket id: 2, customer email: user1@nyu.edu, purchase date: 2022-08-03, purchase time:
+11:55:55, sold price: 300, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 1, Expiration Date: 03/2023)
+Ticket id: 3, customer email: user2@nyu.edu, purchase date: 2022-09-04, purchase time:
+11:55:55, sold price: 300, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 2, Expiration Date: 03/2023)
+Ticket id: 4, customer email: user1@nyu.edu, purchase date: 2022-08-21, purchase time:
+11:55:55, sold price: 300, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 1, Expiration Date: 03/2023)
+Ticket id: 5, customer email: testcustomer@nyu.edu, purchase date: 2022-09-28, purchase
+time: 11:55:55, sold price: 300, card type: credit, card number: 1111-2222-3333-4444, name
+on card: Test Customer 1, Expiration Date: 03/2023)
+Ticket id: 6, customer email: testcustomer@nyu.edu, purchase date: 2022-08-02, purchase
+time: 11:55:55, sold price: 350, card type: credit, card number: 1111-2222-3333-4444, name
+on card: Test Customer 1, Expiration Date: 03/2023)
+Ticket id: 7, customer email: user3@nyu.edu, purchase date: 2022-07-03, purchase time:
+11:55:55, sold price: 350, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 3, Expiration Date: 03/2023)
+Ticket id: 8, customer email: user3@nyu.edu, purchase date: 2021-12-03, purchase time:
+11:55:55, sold price: 300, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 3, Expiration Date: 03/2023)
+Ticket id: 9, customer email: user3@nyu.edu, purchase date: 2022-07-04, purchase time:
+11:55:55, sold price: 300, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 3, Expiration Date: 03/2023)
+Ticket id: 11, customer email: user3@nyu.edu, purchase date: 2022-05-23, purchase time:
+11:55:55, sold price: 300, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 3, Expiration Date: 03/2023)
+Ticket id: 12, customer email: testcustomer@nyu.edu, purchase date: 2022-05-02, purchase
+time: 11:55:55, sold price: 500, card type: credit, card number: 1111-2222-3333-4444, name
+on card: Test Customer 1, Expiration Date: 03/2023)
+Ticket id: 14, customer email: user3@nyu.edu, purchase date: 2022-11-20, purchase time:
+11:55:55, sold price: 400, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 3, Expiration Date: 03/2023)
+Ticket id: 15, customer email: user1@nyu.edu, purchase date: 2022-11-21, purchase time:
+11:55:55, sold price: 400, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 1, Expiration Date: 03/2023)
+Ticket id: 16, customer email: user2@nyu.edu, purchase date: 2022-09-19, purchase time:
+11:55:55, sold price: 400, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 2, Expiration Date: 03/2023)
+Ticket id: 17, customer email: user1@nyu.edu, purchase date: 2022-08-11, purchase time:
+11:55:55, sold price: 300, card type: credit, card number: 1111-2222-3333-5555, name on
+card: User 1, Expiration Date: 03/2023)
+Ticket id: 18, customer email: testcustomer@nyu.edu, purchase date: 2022-09-25, purchase
+time: 11:55:55, sold price: 300, card type: credit, card number: 1111-2222-3333-4444, name
+on card: Test Customer 1, Expiration Date: 03/2023)
+Ticket id: 19, customer email: user1@nyu.edu, purchase date: 2022-11-22, purchase time:
+11:55:55, sold price: 3000, card type: credit, card number: 1111-2222-3333-4444, name on
+card: Test Customer 1, Expiration Date: 03/2023)
+Ticket id: 20, customer email: testcustomer@nyu.edu, purchase date: 2022-07-12, purchase
+time: 11:55:55, sold price: 3000, card type: credit, card number: 1111-2222-3333-4444,
+name on card: Test Customer 1, Expiration Date: 03/2023)
+
+insert into Ticket values ('1', 'testcustomer@nyu.edu', 'United', '102', '300', '2022-09-12 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-08-04 11:55:55');
+
+insert into Ticket values ('2', 'user1@nyu.edu', 'United', '102', '300', '2022-09-12 13:25:25', 'credit', '1111-2222-3333-5555', 'User 1', '2023-03-01 11:55:55', '2022-08-03 11:55:55');
+
+insert into Ticket values ('3', 'user2@nyu.edu', 'United', '102', '300', '2022-09-12 13:25:25', 'credit', '1111-2222-3333-5555', 'User 2', '2023-03-01 11:55:55', '2022-09-04 11:55:55');
+
+insert into Ticket values ('4', 'user1@nyu.edu', 'United', '104', '300', '2022-10-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 1', '2023-03-01 11:55:55', '2022-08-21 11:55:55');
+
+insert into Ticket values ('5', 'testcustomer@nyu.edu', 'United', '104', '300', '2022-10-04 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-09-28 11:55:55');
+
+insert into Ticket values ('6', 'testcustomer@nyu.edu', 'United', '106', '350', '2022-08-04 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-08-02 11:55:55');
+
+insert into Ticket values ('7', 'user3@nyu.edu', 'United', '106', '350', '2022-08-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 3', '2023-03-01 11:55:55', '2022-07-03 11:55:55');
+
+insert into Ticket values ('8', 'user3@nyu.edu', 'United', '839', '300', '2021-12-26 13:25:25', 'credit', '1111-2222-3333-5555', 'User 3', '2023-03-01 11:55:55', '2021-12-03 11:55:55');
+
+insert into Ticket values ('9', 'user3@nyu.edu', 'United', '102', '300', '2022-09-12 13:25:25', 'credit', '1111-2222-3333-5555', 'User 3', '2023-03-01 11:55:55', '2022-07-04 11:55:55');
+
+insert into Ticket values ('11', 'user3@nyu.edu', 'United', '134', '300', '2022-07-12 13:25:25', 'credit', '1111-2222-3333-5555', 'User 3', '2023-03-01 11:55:55', '2022-05-23 11:55:55');
+
+insert into Ticket values ('12', 'testcustomer@nyu.edu', 'United', '715', '500', '2022-09-28 10:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-05-02 11:55:55');
+
+insert into Ticket values ('14', 'user3@nyu.edu', 'United', '206', '400', '2023-02-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 3', '2023-03-01 11:55:55', '2022-11-20 11:55:55');
+
+insert into Ticket values ('15', 'user1@nyu.edu', 'United', '206', '400', '2023-02-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 1', '2023-03-01 11:55:55', '2022-11-21 11:55:55');
+
+insert into Ticket values ('16', 'user2@nyu.edu', 'United', '206', '400', '2023-02-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 2', '2023-03-01 11:55:55', '2022-09-19 11:55:55');
+
+insert into Ticket values ('17', 'user1@nyu.edu', 'United', '207', '300', '2023-03-04 13:25:25', 'credit', '1111-2222-3333-5555', 'User 1', '2023-03-01 11:55:55', '2022-08-11 11:55:55');
+
+insert into Ticket values ('18', 'testcustomer@nyu.edu', 'United', '207', '300', '2023-03-04 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-05-02 11:55:55');
+
+insert into Ticket values ('19', 'testcustomer@nyu.edu', 'United', '296', '3000', '2022-12-30 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-11-22 11:55:55');
+
+insert into Ticket values ('20', 'testcustomer@nyu.edu', 'United', '296', '3000', '2022-12-30 13:25:25', 'credit', '1111-2222-3333-4444', 'Test Customer 1', '2023-03-01 11:55:55', '2022-07-12 11:55:55');
+
+
+
+
+Add/Create rate records as follows:
+customer email: testcustomer@nyu.edu, airline name: United, flight number: 102, departure
+date and time: 2022-09-12 13:25:25, rating: 4, comment: “Very Comfortable”
+customer email: user1@nyu.edu, airline name: United, flight number: 102, departure date
+and time: 2022-09-12 13:25:25, rating: 5, comment: “Relaxing, check-in and onboarding very
+professional”
+customer email: user2@nyu.edu, airline name: United, flight number: 102, departure date
+and time: 2022-09-12 13:25:25, rating: 3, comment: “Satisfied and will use the same flight
+again”
+customer email: testcustomer@nyu.edu, airline name: United, flight number: 104, departure
+date and time: 2022-10-04 13:25:25, rating: 1, comment: “Customer Care services are not
+good”
+customer email: user1@nyu.edu, airline name: United, flight number: 104, departure date
+and time: 2022-10-04 13:25:25, rating: 5, comment: “Comfortable journey and Professional”
+
+insert into Review values ('testcustomer@nyu.edu', 'United', '102', '2022-09-12 13:25:25', '4', 'Very Comfortable');
+
+insert into Review values ('user1@nyu.edu', 'United', '102', '2022-09-12 13:25:25', '5', 'Relaxing, check-in and onboarding very professional');
+
+insert into Review values ('user2@nyu.edu', 'United', '102', '2022-09-12 13:25:25', '3', 'Satisfied and will use the same flight again');
+
+insert into Review values ('testcustomer@nyu.edu', 'United', '104', '2022-10-04 13:25:25', '1', 'Customer Care services are not good');
+
+insert into Review values ('user1@nyu.edu', 'United', '104', '2022-10-04 13:25:25', '5', 'Comfortable journey and Professional');
+
+
